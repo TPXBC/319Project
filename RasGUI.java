@@ -44,9 +44,11 @@ public class RasGUI<S, K, V> {
 
 	
 	JPanel tablesPanel = new JPanel();
-	JPanel tpanel = new JPanel();
-	JPanel spanel = new JPanel();
-	JPanel hpanel = new JPanel();
+	JPanel singleTablePanel = new JPanel();
+	JPanel serverPanel = new JPanel();
+	JPanel hostPanel = new JPanel();
+	
+	Boolean fileChosen = false;
 	
 	Button[] button;	
 	
@@ -63,10 +65,11 @@ public class RasGUI<S, K, V> {
 		int result = mainWindow.fileChooser.showOpenDialog(null);
 		
 		if (result == JFileChooser.APPROVE_OPTION) {
-			mainWindow.file = mainWindow.fileChooser.getSelectedFile();
+				mainWindow.file = mainWindow.fileChooser.getSelectedFile();
 		} else {
-			throw new Exception("Failed to Chose File");
+				throw new Exception("Failed to Chose File");
 		}
+
 		
 		mainWindow.ras = new RAS(mainWindow.file);
 		mainWindow.button = new Button[mainWindow.ras.getTableCount()];
@@ -155,10 +158,10 @@ public class RasGUI<S, K, V> {
 						singleTableFrame.setTitle("Table: " + (tableNum));
 						singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 						singleTableFrame.setSize(400, 550);
-						tpanel.setLayout(new GridLayout(2,0,5,5));
+						singleTablePanel.setLayout(new GridLayout(2,0,5,5));
 						addGreeterButton();
 						addWaitstaffButton();
-						singleTableFrame.setContentPane(tpanel);
+						singleTableFrame.setContentPane(singleTablePanel);
 						///singleTableFrame.setLocationRelativeTo(null);
 						singleTableFrame.setVisible(true);
 						System.out.println(k);
@@ -223,8 +226,8 @@ public class RasGUI<S, K, V> {
 		singleTableFrame.setTitle("Table: " + (tableNum));
 		singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		singleTableFrame.setSize(400, 550);
-		tpanel.setLayout(new GridLayout(2,0,5,5));
-		singleTableFrame.setContentPane(tpanel);
+		singleTablePanel.setLayout(new GridLayout(2,0,5,5));
+		singleTableFrame.setContentPane(singleTablePanel);
 		singleTableFrame.setVisible(true);
 	}
 	
@@ -234,7 +237,7 @@ public class RasGUI<S, K, V> {
 	private void addWaitstaffButton() {
 		JButton waitstaffButton = new JButton("Waitstaff");
 		waitstaffButton.setSize(150,150);
-		tpanel.add(waitstaffButton);
+		singleTablePanel.add(waitstaffButton);
 		waitstaffButton.addActionListener(new ActionListener() {
 		
 			/**
@@ -247,11 +250,11 @@ public class RasGUI<S, K, V> {
 					singleTableFrame.setTitle("Table: " + (tableNum));
 					singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					singleTableFrame.setSize(400, 550);
-					spanel.setLayout(new GridLayout(5,0,5,5));
-					openOrder(spanel);
-					clearTable(spanel);
-					backButton(spanel);
-					singleTableFrame.setContentPane(spanel);
+					serverPanel.setLayout(new GridLayout(5,0,5,5));
+					openOrder(serverPanel);
+					clearTable(serverPanel);
+					backButton(serverPanel);
+					singleTableFrame.setContentPane(serverPanel);
 					singleTableFrame.setVisible(true);
 				} else {
 					serverFrameSetup();
@@ -266,8 +269,8 @@ public class RasGUI<S, K, V> {
 				singleTableFrame.setTitle("Table: " + (tableNum));
 				singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				singleTableFrame.setSize(400, 550);
-				spanel.setLayout(new GridLayout(5,0,5,5));
-				singleTableFrame.setContentPane(spanel);
+				serverPanel.setLayout(new GridLayout(5,0,5,5));
+				singleTableFrame.setContentPane(serverPanel);
 				singleTableFrame.setVisible(true);
 			}
 		});
@@ -279,7 +282,7 @@ public class RasGUI<S, K, V> {
 	private void addGreeterButton() {
 		JButton greeter = new JButton("Greeter");
 		greeter.setSize(150, 150);
-		tpanel.add(greeter);
+		singleTablePanel.add(greeter);
 		greeter.addActionListener(new ActionListener() {
 			
 			/**
@@ -292,12 +295,12 @@ public class RasGUI<S, K, V> {
 					singleTableFrame.setTitle("Table: " + (tableNum));
 					singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					singleTableFrame.setSize(400, 550);
-					hpanel.setLayout(new GridLayout(5, 0, 5, 5));
+					hostPanel.setLayout(new GridLayout(5, 0, 5, 5));
 					assignTable();
-					clearTable(hpanel);
-					openOrder(hpanel);
-					backButton(hpanel);
-					singleTableFrame.setContentPane(hpanel);
+					clearTable(hostPanel);
+					openOrder(hostPanel);
+					backButton(hostPanel);
+					singleTableFrame.setContentPane(hostPanel);
 					singleTableFrame.setVisible(true);
 				} else {
 					hostFrameSetup();
@@ -312,8 +315,8 @@ public class RasGUI<S, K, V> {
 				singleTableFrame.setTitle("Table: " + (tableNum));
 				singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				singleTableFrame.setSize(400, 550);
-				hpanel.setLayout(new GridLayout(5,0,5,5));
-				singleTableFrame.setContentPane(hpanel);
+				hostPanel.setLayout(new GridLayout(5,0,5,5));
+				singleTableFrame.setContentPane(hostPanel);
 				singleTableFrame.setVisible(true);
 			}
 		});
@@ -326,7 +329,7 @@ public class RasGUI<S, K, V> {
 	private void assignTable() {
 		JButton assignTableButton = new JButton("Assign Table");
 		assignTableButton.setSize(75, 75);
-		hpanel.add(assignTableButton);
+		hostPanel.add(assignTableButton);
 		assignTableButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

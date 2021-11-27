@@ -28,6 +28,13 @@ public class OrderGUI<V> extends RasGUI {
 	Table [] table;
 	RAS ras;
 	
+	
+	JFrame qrPayFrame = new JFrame();
+	JPanel qrPayPanel = new JPanel();
+	
+	
+	
+	
 	JFrame OrderFrame = new JFrame();
 	JPanel MainOrderPanel = new JPanel();
 	JPanel payPanel = new JPanel();
@@ -385,6 +392,24 @@ public class OrderGUI<V> extends RasGUI {
 		JButton cashButton = new JButton("Pay With Cash");
 		cashButton.setSize(75, 75);
 		payPanel.add(cashButton);
+		
+		cashButton.addActionListener(new ActionListener() {
+			/**
+			 * Open New GUI Window
+			 * Send Current Total
+			 * Add $5, $10, $20, $50, $100 Payment JButton
+			 * Add Custom Textbox for custom payment I.E $35.45
+			 * Add JButton to confirm custom Payment
+			 * Adding Tip textbox and JButton
+			 * Insert Tip ammount and confirm
+			 * Click Confirm cash payment JButton
+			 * Get change total
+			 */
+			
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 	}
 	
 	/**
@@ -394,6 +419,30 @@ public class OrderGUI<V> extends RasGUI {
 		JButton qrCodeButton = new JButton("Pay With QR Code");
 		qrCodeButton.setSize(75, 75);
 		payPanel.add(qrCodeButton);
+		
+		qrCodeButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Open New GUI Window
+				 * Send Current Total of Table (tableNode = table[number - 1]
+				 * Double subtotal = tableNode.printSubtotal
+				 * Add a JTextBox and JButton for TIP **Ask user if they would like to add a tip**
+				 * Click JButton to Confirm Tip Amount
+				 * If Tip Textbox is blank when Confirmed. Set tip to 0
+				 * Give two new JButtons && Restructure JFrame
+				 * JButton1 = Valid QR Scan
+				 * JButton2 = Invalid QR Scan
+				 * If JButton1 is Clicked -- Subtract Total from Total so dues = 0
+				 * Print Payment Confirmed AND print receipt tableNode.printReceipt()
+				 * Clear Table -> setTableUnassigned();
+				 * 
+				 * If Jbutton2 is Clicked -- Print Payment Invalid
+				 * System.out.println("Payment Invalid Please Scan Again")
+				 * Then retry payment
+				 */
+			}
+		});
 	}
 	
 	/**
@@ -404,16 +453,5 @@ public class OrderGUI<V> extends RasGUI {
 		debitButton.setSize(75, 75);
 		payPanel.add(debitButton);
 	}
-	
-	/**
-	 * Adds Button to Handle PayPal
-	 */
-	private void paypalPayButton() {
-		JButton paypalButton = new JButton("Pay With Paypal");
-		paypalButton.setSize(75, 75);
-		payPanel.add(paypalButton);
-	}
-
-
 	
 }
