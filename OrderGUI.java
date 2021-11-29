@@ -32,7 +32,13 @@ public class OrderGUI<V> extends RasGUI {
 	JFrame qrPayFrame = new JFrame();
 	JPanel qrPayPanel = new JPanel();
 	
+	JFrame cashPayFrame = new JFrame();
+	JPanel cashPayPanelWest = new JPanel();
+	JPanel cashPayPanelElse = new JPanel();
 	
+	JTextField customCashPayField;
+	JTextField tipCashPayField;
+	JTextField changeDuePayField;
 	
 	
 	JFrame OrderFrame = new JFrame();
@@ -243,7 +249,7 @@ public class OrderGUI<V> extends RasGUI {
 			int i = 0;
 			public void actionPerformed(ActionEvent e) {
 				if (i ==0) {
-					i++;
+					i++;																																								i++;
 					OrderFrame.setTitle("Sides Menu");
 					OrderFrame.setSize(400, 550);
 					addItems(ras.getSidesMenu(), sidesPanel);
@@ -349,10 +355,12 @@ public class OrderGUI<V> extends RasGUI {
 					OrderFrame.setTitle("Payment Menu");
 					OrderFrame.setSize(400, 550);
 					payPanel.setLayout(new GridLayout(5,5,5,5));
+					OrderFrame.setContentPane(payPanel);
 					cashPayButton();
 					qrPayButton();
 					debitPayButton();
 					backButton(payPanel);
+					OrderFrame.setVisible(true);
 				} else {
 					paymentMenu();
 				}
@@ -406,7 +414,147 @@ public class OrderGUI<V> extends RasGUI {
 			 * Get change total
 			 */
 			
+			int i = 0;
 			public void actionPerformed(ActionEvent e) {
+				if (i == 0) {
+					i++;
+					cashPayFrame.setTitle("Cash Payment");
+					cashPayFrame.setSize(400, 550);
+					
+					tableNode = table[number - 1];
+					Double subtotal = tableNode.printSubTotal();
+					
+					cashPayPanelWest.setLayout(new GridLayout(6,1,5,5));
+					cashPayPanelElse.setLayout(new GridLayout(5,5,5,5));
+					
+					
+					cashPayFrame.add(BorderLayout.WEST, cashPayPanelWest);
+					cashPayFrame.add(BorderLayout.CENTER,cashPayPanelElse);
+					
+					fiveDollarButton();
+					tenDollarButton();
+					twentyDollarButton();
+					fiftyDollarButton();
+					hundredDollarButton();
+					backButton(cashPayPanelWest);
+					
+					customPayField();
+					customPayButton();
+					tipPayField();
+					tipPayButton();
+					changeDuePayField();
+					
+
+					cashPayFrame.setVisible(true);
+				} else {
+					mainCashFrame();
+				}
+				
+			}
+			
+			private void mainCashFrame() {
+				cashPayFrame.setTitle("Payment Menu");
+				cashPayFrame.setSize(400, 550);
+				cashPayFrame.setContentPane(cashPayPanelWest);
+				cashPayFrame.setVisible(true);
+			}
+			
+			private void fiveDollarButton() {
+				JButton fiveDollarButton = new JButton("$5.00");
+				cashPayPanelWest.add(fiveDollarButton);
+				
+				fiveDollarButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						customCashPayField.setText("5.00");
+					}
+					
+				});
+				
+			}
+			
+			private void tenDollarButton() {
+				JButton tenDollarButton = new JButton("$10.00");
+				cashPayPanelWest.add(tenDollarButton);
+				
+				tenDollarButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						customCashPayField.setText("10.00");
+					}
+					
+				});
+			}
+			
+			private void twentyDollarButton() {
+				JButton twentyDollarButton = new JButton("$20.00");
+				cashPayPanelWest.add(twentyDollarButton);
+				
+			}
+			
+			private void fiftyDollarButton() {
+				JButton fiftyDollarButton = new JButton("$50.00");
+				cashPayPanelWest.add(fiftyDollarButton);
+				
+			}
+			
+			private void hundredDollarButton() {
+				JButton hundredDollarButton = new JButton("$100.00");
+				cashPayPanelWest.add(hundredDollarButton);
+				
+			}
+			
+			private void customPayButton() {
+				JButton selfPayButton = new JButton("Enter Amount");
+				cashPayPanelElse.add(selfPayButton);
+				
+				selfPayButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						Double customAmnt = Double.parseDouble(customCashPayField.getText());
+						changeDuePayField.setText(String.format("%$.2f", customAmnt));
+					}
+					
+				});
+			}
+			
+			
+			private void customPayField() {
+				customCashPayField = new JTextField();
+				cashPayPanelElse.add(customCashPayField);
+				
+			}
+			
+			private void tipPayButton() {
+				JButton tipPayButton = new JButton("Enter Tip Amount");
+				cashPayPanelElse.add(tipPayButton);
+				
+				tipPayButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
+			}
+			
+			private void tipPayField() {
+				tipCashPayField = new JTextField();
+				cashPayPanelElse.add(tipCashPayField);
+				
+			}
+			
+			private void changeDuePayField() {
+				changeDuePayField = new JTextField();
+				cashPayPanelElse.add(changeDuePayField);
 				
 			}
 		});
