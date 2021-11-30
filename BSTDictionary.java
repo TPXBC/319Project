@@ -2,6 +2,7 @@
  * BSTDictionary
  */
 package data;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -11,43 +12,41 @@ public class BSTDictionary<K, V> {
 	private K key;
 	private V value;
 	private int noKeys;
-	
-	
+
 	/**
 	 * Iterator to Organize is Ascending Order
 	 */
-	private class KeyIterator implements Iterator<K>{
-		LinkedItemStack<BSTDictionary<K,V>> pos = new LinkedItemStack<BSTDictionary<K,V>>();
-		
+	private class KeyIterator implements Iterator<K> {
+		LinkedItemStack<BSTDictionary<K, V>> pos = new LinkedItemStack<BSTDictionary<K, V>>();
+
 		public KeyIterator() {
 			pushLeft(pos);
 		}
-		
-		
+
 		/**
 		 * Check if still has values
 		 */
-		public boolean hasNext(){
+		public boolean hasNext() {
 			return !pos.isEmpty();
 		}
-		
+
 		/**
 		 * Next Key In Order
 		 */
 		public K next() {
-			if(!hasNext()) {
+			if (!hasNext()) {
 				throw new NoSuchElementException();
 			} else {
-				BSTDictionary<K,V> nextTree =pos.popItem();
+				BSTDictionary<K, V> nextTree = pos.popItem();
 				nextTree.right.pushLeft(pos);
 				return (K) nextTree.key;
 			}
 		}
 	}
 
-
 	/**
 	 * Insert Key and Value
+	 * 
 	 * @param key
 	 * @param value
 	 * @return
@@ -56,12 +55,12 @@ public class BSTDictionary<K, V> {
 		if (isEmpty()) {
 			this.key = key;
 			this.value = value;
-			this.left = new BSTDictionary<K,V>();
-			this.right = new BSTDictionary<K,V>();
+			this.left = new BSTDictionary<K, V>();
+			this.right = new BSTDictionary<K, V>();
 			this.noKeys += 1;
 			return null;
 		} else {
-			int comp = ((Comparable)key).compareTo(this.key);
+			int comp = ((Comparable) key).compareTo(this.key);
 			if (comp < 0) {
 				return left.put(key, value);
 			} else if (comp == 0) {
@@ -73,7 +72,7 @@ public class BSTDictionary<K, V> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Get Value for Associated Key
 	 */
@@ -81,7 +80,7 @@ public class BSTDictionary<K, V> {
 		if (isEmpty()) {
 			return null;
 		} else {
-			int comp = ((Comparable)key).compareTo(this.key);
+			int comp = ((Comparable) key).compareTo(this.key);
 			if (comp < 0) {
 				return this.left.get(key);
 			} else if (comp == 0) {
@@ -91,11 +90,11 @@ public class BSTDictionary<K, V> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Copy Up
 	 */
-	private void copyUp(BSTDictionary<K,V> otherDict) {
+	private void copyUp(BSTDictionary<K, V> otherDict) {
 		this.left = otherDict.left;
 		this.right = otherDict.right;
 		this.key = otherDict.key;
@@ -104,7 +103,7 @@ public class BSTDictionary<K, V> {
 	}
 
 	/**
-	 * Get Left Most key 
+	 * Get Left Most key
 	 */
 	private BSTDictionary<K, V> getLeftMost() {
 		if (isEmpty()) {
@@ -113,7 +112,7 @@ public class BSTDictionary<K, V> {
 			return left.getLeftMost();
 		}
 	}
-	
+
 	/**
 	 * Removes Key From Dict -- Uses Copy Up Method
 	 */
@@ -122,23 +121,23 @@ public class BSTDictionary<K, V> {
 		if (isEmpty()) {
 			return null;
 		}
-		int ret = ((Comparable)key).compareTo(this.key);
-		
+		int ret = ((Comparable) key).compareTo(this.key);
+
 		if (ret < 0) {
-			V value = (V)left.remove(key);
+			V value = (V) left.remove(key);
 			return value;
 		} else if (ret > 0) {
-			V value = (V)right.remove(key);
+			V value = (V) right.remove(key);
 			return value;
 		}
-		
+
 		V value2 = this.value;
 		if (left.isEmpty()) {
 			copyUp(right);
 		} else if (right.isEmpty()) {
 			copyUp(left);
 		} else {
-			BSTDictionary<K,V> leftMost = right.getLeftMost();
+			BSTDictionary<K, V> leftMost = right.getLeftMost();
 			this.key = leftMost.key;
 			this.value = leftMost.value;
 			noKeys--;
@@ -152,13 +151,13 @@ public class BSTDictionary<K, V> {
 	 */
 	public Iterator<K> keys() {
 		return new KeyIterator();
-		
+
 	}
-	
+
 	/**
 	 * Stack Helper For Key Iterator
 	 */
-	private void pushLeft(LinkedItemStack<BSTDictionary<K,V>> pos) {
+	private void pushLeft(LinkedItemStack<BSTDictionary<K, V>> pos) {
 		if (!isEmpty()) {
 			pos.pushItem(this);
 			left.pushLeft(pos);
@@ -167,20 +166,19 @@ public class BSTDictionary<K, V> {
 
 	/**
 	 * Check If Dict Is Empty
-	 */		
+	 */
 	public boolean isEmpty() {
 		return noKeys == 0;
 	}
-	
+
 	/**
 	 * Get NoKeys
 	 */
 	public int noKeys() {
 		if (isEmpty()) {
 			return 0;
-		}	
+		}
 		return noKeys;
 	}
 
 }
-

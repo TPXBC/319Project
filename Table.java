@@ -10,16 +10,16 @@ import java.util.ArrayList;
 public class Table implements Order {
 	private ArrayList<String> menuItem;
 	private ArrayList<Double> menuPrice;
-	
+
 	private String indexItem;
-	
+
 	private double subTotal;
 	private double tipAmnt;
-	
+
 	int indexCounter;
 	int tableNum;
 	int orderCounter = 0;
-	
+
 	/**
 	 * No Param Constructor
 	 */
@@ -30,9 +30,10 @@ public class Table implements Order {
 		subTotal = 0;
 		tipAmnt = 0;
 	}
-	
+
 	/**
 	 * Constructor with TableNum
+	 * 
 	 * @param tableNum
 	 */
 	public Table(int tableNum) {
@@ -71,8 +72,7 @@ public class Table implements Order {
 	}
 
 	/**
-	 * Adds Tip to Subtotal
-	 * Also Adds to Server Assigned to Table
+	 * Adds Tip to Subtotal Also Adds to Server Assigned to Table
 	 */
 	public void addTip(double tipAmnt) {
 		// TODO Auto-generated method stub
@@ -86,11 +86,11 @@ public class Table implements Order {
 	public void printReceipt() {
 		if (!menuItem.isEmpty()) {
 			if (tableNum > 10) {
-				System.out.printf(" ___Table: %d #: %d %8s_\n" , tableNum, orderCounter, "ORDER RECEIPT");
+				System.out.printf(" ___Table: %d #: %d %8s_\n", tableNum, orderCounter, "ORDER RECEIPT");
 			} else {
-				System.out.printf(" ____Table: %d #: %d %7s_\n" , tableNum, orderCounter, "ORDER RECEIPT");
+				System.out.printf(" ____Table: %d #: %d %7s_\n", tableNum, orderCounter, "ORDER RECEIPT");
 			}
-			for(int i = 0; i < menuItem.size(); i++) {
+			for (int i = 0; i < menuItem.size(); i++) {
 				String item = menuItem.get(i);
 				double itemPrice = menuPrice.get(i);
 				String output = String.format("|%-25s - %.2f|", item, itemPrice);
@@ -99,15 +99,15 @@ public class Table implements Order {
 			System.out.println("|--------------------------------|");
 			System.out.printf("|%-25s - %.2f|\n", "Tip", tipAmnt);
 			System.out.println("|--------------------------------|");
-			if(subTotal >= 100.00 && subTotal < 1000.00) {
+			if (subTotal >= 100.00 && subTotal < 1000.00) {
 				System.out.printf("|%-22s - %.2f |\n", "Subtotal", subTotal);
-			} else if (subTotal >= 1000.00){
+			} else if (subTotal >= 1000.00) {
 				System.out.printf("|%-21s - %.2f |\n", "Subtotal", subTotal);
 			} else {
 				System.out.printf("|%-23s - %.2f |\n", "Subtotal", subTotal);
 			}
 			System.out.println("|________________________________|");
-			
+
 		} else {
 			System.out.println("NOTHING ORDERED YET");
 		}
@@ -120,8 +120,7 @@ public class Table implements Order {
 		// TODO Auto-generated method stub
 		return subTotal;
 	}
-	
-	
+
 	/**
 	 * Resets Arrays
 	 */
@@ -131,9 +130,10 @@ public class Table implements Order {
 		subTotal = 0;
 		tipAmnt = 0;
 	}
-	
+
 	/**
 	 * Returns Index From Item
+	 * 
 	 * @param item
 	 * @return
 	 */
@@ -148,7 +148,7 @@ public class Table implements Order {
 			return getIndex(item);
 		}
 	}
-	
+
 	/*
 	 * FOR DAVID AVERAGE METHOD
 	 */
@@ -159,22 +159,21 @@ public class Table implements Order {
 		}
 		System.out.printf("%.2f \n", avgPriceTest / menuPrice.size());
 	}
-	
+
 	/**
 	 * Returns Amount of Orders to Occur at This Table
+	 * 
 	 * @return
 	 */
 	public int getOrderCounter() {
 		return orderCounter;
 	}
-	
+
 	/**
 	 * Used to Increase Number of Orders at This Table
 	 */
 	public void increaseOrderCounter() {
 		orderCounter++;
 	}
-	
-	
-	
+
 }
