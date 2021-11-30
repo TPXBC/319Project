@@ -100,7 +100,7 @@ public class RasGUI<S, K, V> {
 	public void addTableButton() throws Exception {
 		order = new OrderGUI(ras.getTableCount(), ras);
 		tableButton = new JButton("Tables");
-		tableButton.setSize(75, 75);
+		
 		RASpanel.add(tableButton);
 		tableButton.addActionListener(new ActionListener() {
 
@@ -123,10 +123,14 @@ public class RasGUI<S, K, V> {
 			tablesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
 			tablesPanel.setLayout(new GridLayout(10, 3, 5, 5));
+			
 			addTables();
+			
 			tablesFrame.add(BorderLayout.CENTER, tablesPanel);
 			tablesFrame.setVisible(true);
+			
 		} else {
+			
 			tablesFrame = new JFrame("Tables Window");
 			tablesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
@@ -193,6 +197,9 @@ public class RasGUI<S, K, V> {
 		singleTableFrame.setVisible(true);
 	}
 
+	/**
+	 * Used to Reload Original Frame When Respective Back Button is Pressed
+	 */
 	private void mainFrameSetup() {
 		RASframe.setSize(400, 550);
 		RASpanel.setLayout(new GridLayout(3, 0, 5, 5));
@@ -201,6 +208,9 @@ public class RasGUI<S, K, V> {
 		RASframe.setVisible(true);
 	}
 
+	/**
+	 * Used to Reload Manager Frame When Respective Back Button is Pressed
+	 */
 	private void manageFrameSetup() {
 		manageFrame.setTitle("Management Window");
 		manageFrame.setSize(400, 550);
@@ -264,7 +274,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addWaitstaffButton() {
 		JButton waitstaffButton = new JButton("Waitstaff");
-		waitstaffButton.setSize(150, 150);
+		
 		singleTablePanel.add(waitstaffButton);
 		waitstaffButton.addActionListener(new ActionListener() {
 
@@ -312,7 +322,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addGreeterButton() {
 		JButton greeter = new JButton("Greeter");
-		greeter.setSize(150, 150);
+		
 		singleTablePanel.add(greeter);
 		greeter.addActionListener(new ActionListener() {
 
@@ -363,7 +373,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void assignTable() {
 		JButton assignTableButton = new JButton("Assign Table");
-		assignTableButton.setSize(75, 75);
+		
 		hostPanel.add(assignTableButton);
 		assignTableButton.addActionListener(new ActionListener() {
 
@@ -381,7 +391,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void openOrder(JPanel panel) throws Exception {
 		JButton orderButton = new JButton("Order");
-		orderButton.setSize(75, 75);
+		
 		panel.add(orderButton);
 		orderButton.addActionListener(new ActionListener() {
 
@@ -397,7 +407,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void clearTable(JPanel panel) {
 		JButton clearTableButton = new JButton("Clear Table");
-		clearTableButton.setSize(75, 75);
+		
 		panel.add(clearTableButton);
 		clearTableButton.addActionListener(new ActionListener() {
 
@@ -413,7 +423,7 @@ public class RasGUI<S, K, V> {
 	 */
 	public void backButton(JPanel panel, int num) {
 		JButton backButton = new JButton("Back");
-		backButton.setSize(200, 200);
+		
 		panel.add(backButton);
 		backButton.addActionListener(new ActionListener() {
 
@@ -438,7 +448,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addKitchenButton() {
 		kitchen = new JButton("Kitchen");
-		kitchen.setSize(75, 75);
+		
 		RASpanel.add(kitchen);
 	}
 
@@ -446,11 +456,11 @@ public class RasGUI<S, K, V> {
 	 * MANAGER HANDLER
 	 */
 	/**
-	 * Manager Button
+	 * Add Manager Button
 	 */
 	private void addManagerButton() {
 		manager = new JButton("Manager");
-		manager.setSize(75, 75);
+		
 		RASpanel.add(manager);
 
 		manager.addActionListener(new ActionListener() {

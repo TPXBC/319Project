@@ -1,3 +1,6 @@
+/**
+ * Linked Item Stack Class
+ */
 package data;
 
 import java.util.NoSuchElementException;
@@ -7,6 +10,11 @@ public class LinkedItemStack<E> {
 	private int noItems;
 	private E item;
 	
+	/**
+	 * Inner Node Class
+	 * @author Christian
+	 *
+	 */
 	private class Node {
 		E item;
 		Node next;
@@ -18,17 +26,28 @@ public class LinkedItemStack<E> {
 		}
 	}
 	
+	/**
+	 * No Args Constructor
+	 */
 	public LinkedItemStack() {
 		super();
 		daTop = new Node(item, daTop);
 	}
 	
+	/**
+	 * Adds Item to the Top of Stack
+	 * @param item
+	 */
 	public void pushItem(E item) {
 		Node prevTop = daTop;
 		daTop = new Node(item, prevTop);
 		noItems++;
 	}
 
+	/**
+	 * Removes the Top Item of the Stack
+	 * @return
+	 */
 	public E popItem() {
 		if (!isEmpty()) {
 			E item = daTop.item;
@@ -40,6 +59,10 @@ public class LinkedItemStack<E> {
 		}
 	}
 
+	/**
+	 * Shows the Top Item Without Removing.
+	 * @return
+	 */
 	public E peekItem() {
 		if (!isEmpty()) {
 			return daTop.item;
@@ -48,10 +71,17 @@ public class LinkedItemStack<E> {
 		}
 	}
 
+	/**
+	 * Checks if the Stack is Empty
+	 * @return
+	 */
 	public boolean isEmpty() {
 		return noItems == 0;
 	}
 
+	/**
+	 * Clears the Stack
+	 */
 	public void clear() {
 		if(!isEmpty()) {
 			popItem();

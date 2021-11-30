@@ -18,7 +18,6 @@ import java.util.Iterator;
 
 import GUI.RasGUI;
 import data.BSTDictionary;
-import data.Server;
 
 public class RAS<S, K, V> {
 
@@ -39,11 +38,6 @@ public class RAS<S, K, V> {
 	private BSTDictionary<K, V> desserts = new BSTDictionary<>();
 	private BSTDictionary<K, V> sides = new BSTDictionary<>();
 
-	/**
-	 * Variables for Program
-	 */
-	ArrayList<Server> servers = new ArrayList<Server>();
-	Server noder;
 
 	/**
 	 * Ints
@@ -67,7 +61,6 @@ public class RAS<S, K, V> {
 			 */
 
 			countTables(); // Get Table Count
-			clockInServers(); // Adds Servers to System
 
 			/*
 			 * Add Items to The Menus
@@ -83,48 +76,6 @@ public class RAS<S, K, V> {
 
 			e.printStackTrace();
 
-		}
-	}
-
-	/**
-	 * Sets the Number of Tables Used in the Restaurant
-	 * 
-	 * @param tableCount
-	 * @throws IOException
-	 */
-	private void countTables() throws IOException {
-		reader = new BufferedReader(new FileReader(file));
-		line = null;
-
-		// Count Tables
-		line = reader.readLine();
-		String tableArray[] = line.split("\\s+");
-		int count = Integer.parseInt(tableArray[1]);
-		tableCount = count;
-	}
-
-	/**
-	 * Adds Server Count and Server Names
-	 * 
-	 * @throws IOException
-	 */
-	private void clockInServers() throws IOException {
-		reader = new BufferedReader(new FileReader(file));
-		line = null;
-
-		while (!(reader.readLine().equals("--Servers--"))) {
-		}
-		try {
-			int i = 0;
-			while (!(line = reader.readLine()).equals("--Entrees--")) {
-				String names[] = line.split("\\s+");
-				noder = new Server(names[0], names[1], names[2]);
-				servers.add(noder);
-				i++;
-			}
-			serverCount = i;
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -156,50 +107,20 @@ public class RAS<S, K, V> {
 	}
 
 	/**
-	 * Returns Index From Server List Returns Given Index of Desired Server
+	 * Sets the Number of Tables Used in the Restaurant
 	 * 
-	 * @param item
-	 * @return
+	 * @param tableCount
+	 * @throws IOException
 	 */
-	private int getServerIndex(String sName) {
-		noder = servers.get(serverIndex);
-		if (noder.getfName().equals(sName)) {
-			int i = serverIndex;
-			serverIndex = 0;
-			return i;
-		} else {
-			serverIndex++;
-			return getServerIndex(sName);
-		}
-	}
+	private void countTables() throws IOException {
+		reader = new BufferedReader(new FileReader(file));
+		line = null;
 
-	/**
-	 * Get the Number of Tables in Current Restaurant System
-	 * 
-	 * @return
-	 */
-	public int getTableCount() {
-		return tableCount;
-	}
-
-	/**
-	 * Adds the Menu Item and Price Into the Respective Dictionary
-	 * 
-	 * @param menu
-	 * @param key   (Menu Item)
-	 * @param value (Item Price)
-	 */
-	private void put(BSTDictionary<K, V> menu, K key, V value) {
-		menu.put(key, value);
-	}
-
-	/**
-	 * Returns the Entree BSTDictionary
-	 * 
-	 * @return
-	 */
-	public BSTDictionary<K, V> getEntreeMenu() {
-		return entrees;
+		// Count Tables
+		line = reader.readLine();
+		String tableArray[] = line.split("\\s+");
+		int count = Integer.parseInt(tableArray[1]);
+		tableCount = count;
 	}
 
 	/**
@@ -230,12 +151,30 @@ public class RAS<S, K, V> {
 	}
 
 	/**
+	 * Returns the Entree BSTDictionary
+	 * 
+	 * @return
+	 */
+	public BSTDictionary<K, V> getEntreeMenu() {
+		return entrees;
+	}
+
+	/**
 	 * Returns the Sides BSTDictionary
 	 * 
 	 * @return
 	 */
 	public BSTDictionary<K, V> getSidesMenu() {
 		return sides;
+	}
+
+	/**
+	 * Get the Number of Tables in Current Restaurant System
+	 * 
+	 * @return
+	 */
+	public int getTableCount() {
+		return tableCount;
 	}
 
 	/**
@@ -246,5 +185,16 @@ public class RAS<S, K, V> {
 	 */
 	public Iterator<K> menuItems(BSTDictionary<K, V> menu) {
 		return menu.keys();
+	}
+
+	/**
+	 * Adds the Menu Item and Price Into the Respective Dictionary
+	 * 
+	 * @param menu
+	 * @param key   (Menu Item)
+	 * @param value (Item Price)
+	 */
+	private void put(BSTDictionary<K, V> menu, K key, V value) {
+		menu.put(key, value);
 	}
 }

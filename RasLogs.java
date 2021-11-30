@@ -9,6 +9,13 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Class Used By RAS System to Record Order Statistics
+ * @author Etter
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class RasLogs<K, V> {
 
 	ArrayList<Double> yesterdaysOrders = new ArrayList<Double>();
@@ -30,6 +37,7 @@ public class RasLogs<K, V> {
 	BufferedReader in;
 	PrintWriter out;
 
+	File file;
 	File statsFile;
 	File pricesFile;
 	File yesterdayStatsFile;
@@ -42,8 +50,11 @@ public class RasLogs<K, V> {
 	 * @throws Exception
 	 */
 	public RasLogs() throws Exception {
-
-		statsFile = new File("StatsFile.txt");
+		
+		file = new File("statistics");
+		file.mkdir();
+		
+		statsFile = new File("statistics\\StatsFile.txt");
 		if (statsFile.createNewFile()) {
 			System.out.println("Stats File Created In " + statsFile.getAbsolutePath());
 		} else {
@@ -55,7 +66,7 @@ public class RasLogs<K, V> {
 			loadFileItemCountStats(yearlyItemCount, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		pricesFile = new File("PricesFile.txt");
+		pricesFile = new File("statistics\\PricesFile.txt");
 		if (pricesFile.createNewFile()) {
 			System.out.println("Prices File Created In " + pricesFile.getAbsolutePath());
 		} else {
@@ -67,7 +78,7 @@ public class RasLogs<K, V> {
 			loadFilePricingStats(yearlyOrder, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		yesterdayStatsFile = new File("YesterdayStatsFile.txt");
+		yesterdayStatsFile = new File("statistics\\YesterdayStatsFile.txt");
 		if (yesterdayStatsFile.createNewFile()) {
 			System.out.println("Yesterday's Stats File Created In " + yesterdayStatsFile.getAbsolutePath());
 		} else {
@@ -87,7 +98,7 @@ public class RasLogs<K, V> {
 		in = new BufferedReader(new FileReader(statsFile));
 		String line = null;
 		System.out.println("Load File Stats Method Ran");
-
+		
 		while (!(in.readLine().equals(start))) {
 		}
 		try {
@@ -122,6 +133,7 @@ public class RasLogs<K, V> {
 
 		while (!(in.readLine().equals(start))) {
 		}
+		
 		line = in.readLine();
 		
 		/**
@@ -139,7 +151,7 @@ public class RasLogs<K, V> {
 
 		if (start.equals(itemCounters[1])) {
 
-			if ((Integer.parseInt(day[1]) % 7) == 0) {
+			if ((Integer.parseInt(day[1]) >= 7)) {
 				System.out.println("Method Stopped");
 				return;
 			} else {
@@ -148,7 +160,7 @@ public class RasLogs<K, V> {
 
 		} else if (start.equals(itemCounters[2])) {
 
-			if ((Integer.parseInt(day[1]) % 30) == 0) {
+			if ((Integer.parseInt(day[1]) >= 30)) {
 				return;
 			} else {
 				daysofMonth = Integer.parseInt(day[1]);
@@ -156,7 +168,7 @@ public class RasLogs<K, V> {
 
 		} else if (start.equals(itemCounters[3])) {
 
-			if ((Integer.parseInt(day[1]) % 365) == 0) {
+			if ((Integer.parseInt(day[1]) >= 365)) {
 				return;
 			} else {
 				daysofYear = Integer.parseInt(day[1]);
@@ -509,6 +521,7 @@ public class RasLogs<K, V> {
 		out.close();
 
 		System.out.println("Prices Saved To " + pricesFile.getAbsolutePath());
+		
 	}
 
 	/**

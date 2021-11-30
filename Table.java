@@ -1,5 +1,8 @@
 package data;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -16,9 +19,12 @@ public class Table implements Order {
 	private double subTotal;
 	private double tipAmnt;
 
-	int indexCounter;
-	int tableNum;
-	int orderCounter = 0;
+	private int indexCounter;
+	private int tableNum;
+	private int orderCounter = 0;
+	
+	private PrintWriter out;
+	private File file;
 
 	/**
 	 * No Param Constructor
@@ -81,42 +87,65 @@ public class Table implements Order {
 
 	/**
 	 * Prints Receipt in Console/ Leaves Receipt File in Directory
+	 * @throws Exception 
 	 */
-	public void printReceipt() {
+	public void printReceipt() throws Exception {
+		file = new File("receipts");
+		file.mkdir();
 		if (!menuItem.isEmpty()) {
 			if (tableNum > 10) {
-				System.out.printf(" ___Table: %d #: %d %8s_\n", tableNum, orderCounter, "ORDER RECEIPT");
+				String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+				file = new File(receiptTitle);
+				out = new PrintWriter(file);
+				out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+				
 			} else {
-				System.out.printf(" ____Table: %d #: %d %7s_\n", tableNum, orderCounter, "ORDER RECEIPT");
+				String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+				file = new File(receiptTitle);
+				out = new PrintWriter(file);
+				out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
 			}
 			for (int i = 0; i < menuItem.size(); i++) {
 				String item = menuItem.get(i);
 				double itemPrice = menuPrice.get(i);
 				String output = String.format("|%-25s - %.2f|", item, itemPrice);
-				System.out.println(output);
+				out.println(output);
 			}
-			System.out.println("|--------------------------------|");
-			System.out.printf("|%-25s - %.2f|\n", "Tip", tipAmnt);
-			System.out.println("|--------------------------------|");
-			if (subTotal >= 100.00 && subTotal < 1000.00) {
-				System.out.printf("|%-22s - %.2f |\n", "Subtotal", subTotal);
-			} else if (subTotal >= 1000.00) {
-				System.out.printf("|%-21s - %.2f |\n", "Subtotal", subTotal);
+			out.println("|--------------------------------|");
+			if (tipAmnt >= 1000.00 && tipAmnt < 10000.00) {
+				out.printf("|%-22s - %.2f|\n", "Tip", tipAmnt);
+			} else if (tipAmnt >= 100.00) {
+				out.printf("|%-23s - %.2f|\n", "Tip", tipAmnt);
+			} else if (tipAmnt >= 10.00) {
+				out.printf("|%-24s - %.2f|\n", "Tip", tipAmnt);
+			} else if (tipAmnt < 10.00 && tipAmnt >= 0.00) {
+				out.printf("|%-25s - %.2f|\n", "Tip", tipAmnt);
 			} else {
-				System.out.printf("|%-23s - %.2f |\n", "Subtotal", subTotal);
+				System.out.println("Invalid Tip Amount or Tip to High");
 			}
-			System.out.println("|________________________________|");
 
+			out.println("|--------------------------------|");
+			if (subTotal >= 100.00 && subTotal < 1000.00) {
+				out.printf("|%-22s - %.2f |\n", "Subtotal", subTotal);
+			} else if (subTotal >= 1000.00) {
+				out.printf("|%-21s - %.2f |\n", "Subtotal", subTotal);
+			} else {
+				out.printf("|%-23s - %.2f |\n", "Subtotal", subTotal);
+			}
+			out.println("|________________________________|");
+
+			System.out.printf("Table: %d Order #: %d Printed to Directory\n", tableNum, orderCounter);
 		} else {
-			System.out.println("NOTHING ORDERED YET");
+			out.println("NOTHING ORDERED YET");
 		}
+		out.flush();
+		out.close();
 	}
 
 	/**
 	 * Return SubTotal
 	 */
 	public double printSubTotal() {
-		// TODO Auto-generated method stub
 		return subTotal;
 	}
 
@@ -146,17 +175,6 @@ public class Table implements Order {
 			indexCounter++;
 			return getIndex(item);
 		}
-	}
-
-	/*
-	 * FOR DAVID AVERAGE METHOD
-	 */
-	public void GetAverageItemPrice() {
-		double avgPriceTest = 0.0;
-		for (int i = 0; i < menuPrice.size(); i++) {
-			avgPriceTest = avgPriceTest + menuPrice.get(i);
-		}
-		System.out.printf("%.2f \n", avgPriceTest / menuPrice.size());
 	}
 
 	/**
