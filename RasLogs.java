@@ -32,6 +32,7 @@ public class RasLogs <K,V> {
 	
 	File statsFile;
 	File pricesFile;
+	File yesterdayStatsFile;
 	
 	private String itemCounters[] = new String[]{"--Daily--", "--Weekly--", "--Monthly--", "--Yearly--", "--End--"};
 	
@@ -41,6 +42,7 @@ public class RasLogs <K,V> {
 	 * @throws Exception 
 	 */
 	public RasLogs () throws Exception {
+		
 		statsFile = new File("StatsFile.txt");
 		if(statsFile.createNewFile()) {
 			System.out.println("Stats File Created In " + statsFile.getAbsolutePath());
@@ -51,7 +53,6 @@ public class RasLogs <K,V> {
 			loadFileItemCountStats(weeklyItemCount, itemCounters[1], itemCounters[2], daysofWeek);
 			loadFileItemCountStats(monthlyItemCount, itemCounters[2], itemCounters[3], daysofMonth);
 			loadFileItemCountStats(yearlyItemCount, itemCounters[3], itemCounters[4], daysofYear);
-			
 		}
 		
 		pricesFile = new File("PricesFile.txt");
@@ -66,6 +67,13 @@ public class RasLogs <K,V> {
 			loadFilePricingStats(yearlyOrder, itemCounters[3], itemCounters[4], daysofYear);
 		}
 		
+		yesterdayStatsFile = new File("YesterdayStatsFile.txt");
+		if(yesterdayStatsFile.createNewFile()) {
+			System.out.println("Yesterday's Stats File Created In " + yesterdayStatsFile.getAbsolutePath());
+		} else {
+			System.out.println("Yesterday's Stats File Already Exists In " + yesterdayStatsFile.getAbsolutePath());
+			}
+		
 	}
 	
 	public void loadFileItemCountStats(BSTDictionary<K,V> menu, String start, String end) throws Exception {
@@ -76,6 +84,9 @@ public class RasLogs <K,V> {
 		while(!(in.readLine().equals(start))) {}
 		try {
 			while(!(line = in.readLine()).equals(end)) {
+				if (line.equals("No Items Purchased Yet Today")) {
+					return;
+				}
 				String items[] = line.split("\\s+");
 				K menuItem = (K)items[1];
 				V itemCount = (V) items[3];
@@ -102,8 +113,43 @@ public class RasLogs <K,V> {
 
 		while(!(in.readLine().equals(start))) {}
 		line = in.readLine();
+		if (line.equals("No Items Purchased Yet This Week")) {
+			return;
+		} else if (line.equals("No Items Purchased Yet This Month")) {
+			return;
+		} else if (line.equals("No Items Purchased Yet This Past Year")) {
+			return;
+		} 
+		
 		String[] day = line.split("\\s+");
-		dayofWeek = Integer.parseInt(day[1]);
+		
+		if (start.equals(itemCounters[1])) {
+			
+			if ((Integer.parseInt(day[1]) % 7) == 0) {
+				System.out.println("Method Stopped");
+				return;
+			} else {
+				daysofWeek = Integer.parseInt(day[1]);
+			}
+
+		} else if (start.equals(itemCounters[2])) {
+			
+			if ((Integer.parseInt(day[1]) % 30) == 0) {
+				return;
+			} else {
+				daysofMonth = Integer.parseInt(day[1]);
+			}
+			
+		} else if (start.equals(itemCounters[3])) {
+			
+			if ((Integer.parseInt(day[1]) % 365) == 0) {
+				return;
+			} else {
+				daysofYear = Integer.parseInt(day[1]);
+			}
+			
+		}  
+		
 		try {
 			while(!(line = in.readLine()).equals(end)) {
 				String items[] = line.split("\\s+");
@@ -127,12 +173,15 @@ public class RasLogs <K,V> {
 	 * @throws Exception
 	 */
 	public void loadFilePricingStats(ArrayList<Double> list, String start, String end) throws Exception {
-		in = new BufferedReader(new FileReader(statsFile));
+		in = new BufferedReader(new FileReader(pricesFile));
 		String line = null;
 		
 		while(!(in.readLine().equals(start))) {}
 		try {
 			while(!(line = in.readLine()).equals(end)) {
+				if (line.equals("No Orders Yet Today")) {
+					return;
+				}
 				Double price = Double.parseDouble(line);
 				list.add(price);
 			}
@@ -151,16 +200,60 @@ public class RasLogs <K,V> {
 	 * @throws Exception
 	 */
 	public void loadFilePricingStats(ArrayList<Double> list, String start, String end, int dayofWeek) throws Exception {
-		in = new BufferedReader(new FileReader(statsFile));
+		in = new BufferedReader(new FileReader(pricesFile));
 		String line = null;
 		
 		while(!(in.readLine().equals(start))) {}
 		line = in.readLine();
+		
+		if (line.equals("No Orders Yet This Week")) {
+			return;
+		} else if (line.equals("No Orders Yet This Month")) {
+			return;
+		} else if (line.equals("No Order Yet This Year")) {
+			return;
+		} 
+		
 		String[] day = line.split("\\s+");
-		if (dayofWeek != Integer.parseInt(day[1])) {
-			System.out.println("Error in loadFilePricingStats");
-			System.exit(0);
-		}
+		
+		if (start.equals(itemCounters[1])) {
+			
+			if ((Integer.parseInt(day[1]) % 7) == 0) {
+				daysofWeek = 0;
+				return;
+			} 
+			if (daysofWeek != Integer.parseInt(day[1])) {
+				System.out.printf("Day: Variable - %d : Array - %d", daysofWeek, Integer.parseInt(day[1]));
+				System.out.println("Error: Days Between Files Do Not Match");
+				System.exit(0);
+			}
+			
+		} else if (start.equals(itemCounters[2])) {
+			
+			if ((Integer.parseInt(day[1]) % 30) == 0) {
+				daysofMonth = 0;
+				return;
+			} 
+			if (daysofMonth != Integer.parseInt(day[1])) {
+				System.out.printf("Month: Variable - %d : Array - %d", daysofMonth, Integer.parseInt(day[1]));
+				System.out.println("Error: Days Between Files Do Not Match");
+				System.exit(0);
+			}
+			
+		} else if (start.equals(itemCounters[3])) {
+			
+			if ((Integer.parseInt(day[1]) % 365) == 0) {
+				daysofYear = 0;
+				return;
+			} 
+			if (daysofYear != Integer.parseInt(day[1])) {
+				System.out.printf("Year: Variable - %d : Array - %d", daysofYear, Integer.parseInt(day[1]));
+				System.out.println("Error: Days Between Files Do Not Match");
+				System.exit(0);
+			}
+	
+		}  
+		
 		try {
 			while(!(line = in.readLine()).equals(end)) {
 				Double price = Double.parseDouble(line);
@@ -191,42 +284,47 @@ public class RasLogs <K,V> {
 	 */
 	public void addItemCount(String item) {
 		K conItem = (K) item;
-		Integer count = 0;
+		Integer count = 1;
+		Integer counts = 0;
 		
 		if (dailyItemCount.get(conItem) == null)
 		{
 			dailyItemCount.put(conItem, (V) count);
 		} else {
-			Integer counter = (Integer)dailyItemCount.get(conItem);
-			counter++;
-			dailyItemCount.put(conItem, (V) counter);
+			V counter = dailyItemCount.get(conItem);
+			counts = (Integer) counter;
+			counts++;
+			dailyItemCount.put(conItem, (V) counts);
 		}
 		
 		if (weeklyItemCount.get(conItem) == null)
 		{
 			weeklyItemCount.put(conItem, (V) count);
 		} else {
-			Integer counter = (Integer)weeklyItemCount.get(conItem);
-			counter++;
-			weeklyItemCount.put(conItem, (V) counter);
+			V counter = weeklyItemCount.get(conItem);
+			counts = Integer.parseInt(String.valueOf(counter));
+			counts++;
+			weeklyItemCount.put(conItem, (V) counts);
 		}
 		
 		if (monthlyItemCount.get(conItem) == null) 
 		{
 			monthlyItemCount.put(conItem, (V) count);
 		} else {
-			Integer counter = (Integer)monthlyItemCount.get(conItem);
-			counter++;
-			monthlyItemCount.put(conItem, (V) counter);
+			V counter = monthlyItemCount.get(conItem);
+			counts = Integer.parseInt(String.valueOf(counter));
+			counts++;
+			monthlyItemCount.put(conItem, (V) counts);
 		}
 		
 		if (yearlyItemCount.get(conItem) == null)
 		{
 			yearlyItemCount.put(conItem, (V) count);
 		} else {
-			Integer counter = (Integer)yearlyItemCount.get(conItem);
-			counter++;
-			yearlyItemCount.put(conItem, (V) counter);
+			V counter = yearlyItemCount.get(conItem);
+			counts = Integer.parseInt(String.valueOf(counter));
+			counts++;
+			yearlyItemCount.put(conItem, (V) counts);
 		}	
 	}
 	
@@ -294,7 +392,7 @@ public class RasLogs <K,V> {
 			K item = itemCounter.next();
 			V count = timespan.get(item);
 			String itemString = (String) item;
-			Integer counter = (Integer) count;
+			Integer counter = Integer.parseInt(String.valueOf(count));
 			out.printf("Item: %15s Count: %3d\n", itemString, counter);
 			
 		}
@@ -312,20 +410,69 @@ public class RasLogs <K,V> {
 		getAvgWeeklyPrices();
 		getAvgMonthlyPrices();
 		getAvgYearlyPrices();
-		outputItemCounts(dailyItemCount, itemCounters[0]);
-		outputItemCounts(weeklyItemCount, itemCounters[1]);
-		outputItemCounts(monthlyItemCount, itemCounters[2]);
-		outputItemCounts(yearlyItemCount, itemCounters[3]);
+		
+		if (dailyItemCount.isEmpty()) {
+			out.println(itemCounters[0]);
+			out.println("No Items Purchased Yet Today");
+		} else {
+			outputItemCounts(dailyItemCount, itemCounters[0]);
+		}
+		
+		if (weeklyItemCount.isEmpty()) {
+			out.println(itemCounters[1]);
+			out.println("No Items Purchased Yet This Week");
+		} else {
+			outputItemCounts(weeklyItemCount, itemCounters[1]);
+		}
+		
+		if (monthlyItemCount.isEmpty()) {
+			out.println(itemCounters[2]);
+			out.println("No Items Purchased Yet This Month");
+		} else {
+			outputItemCounts(monthlyItemCount, itemCounters[2]);
+		}
+		
+		if (yearlyItemCount.isEmpty()) {
+			out.println(itemCounters[3]);
+			out.println("No Items Purchased Yet This Past Year");
+		} else {
+			outputItemCounts(yearlyItemCount, itemCounters[3]);
+		}
 		out.println(itemCounters[4]);
 		out.flush();
 		out.close();
 		System.out.println("Statistics Saved To " + statsFile.getAbsolutePath());
 		
 		out = new PrintWriter(pricesFile);
-		outputOrderPrices(dailyOrder, itemCounters[0]);
-		outputOrderPrices(weeklyOrder, itemCounters[1]);
-		outputOrderPrices(monthlyOrder, itemCounters[2]);
-		outputOrderPrices(yearlyOrder, itemCounters[3]);
+		
+		if (dailyOrder.isEmpty()) {
+			out.println(itemCounters[0]);
+			out.println("No Orders Yet Today");
+		} else {
+			outputOrderPrices(dailyOrder, itemCounters[0]);
+		}
+		
+		if (weeklyOrder.isEmpty()) {
+			out.println(itemCounters[1]);
+			out.println("No Orders Yet This Week");
+		} else {
+			outputOrderPrices(weeklyOrder, itemCounters[1]);
+		}
+
+		if (monthlyOrder.isEmpty()) {
+			out.println(itemCounters[2]);
+			out.println("No Orders Yet This Month");
+		} else {
+			outputOrderPrices(monthlyOrder, itemCounters[2]);
+		}
+		
+		if (yearlyOrder.isEmpty()) {
+			out.println(itemCounters[3]);
+			out.println("No Orders Yet This Year");
+		} else {
+			outputOrderPrices(yearlyOrder, itemCounters[3]);
+		}
+		
 		out.println(itemCounters[4]);
 		out.flush();
 		out.close();
@@ -349,6 +496,40 @@ public class RasLogs <K,V> {
 			double itemPrice = orders.next();
 			out.println(itemPrice);
 		}
+	}
+	
+	public void outputYesterdayStatistics() throws FileNotFoundException {
+		out = new PrintWriter(yesterdayStatsFile);
+		
+		if (dayBeforeItemCount.isEmpty() || yesterdaysOrders.isEmpty()	 ) {
+			out.println("No Orders Were Placed Yesterday");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		out.println("Day Before Item Count");
+		
+		for (Iterator<K> itemCounter = dayBeforeItemCount.keys(); itemCounter.hasNext();) {
+			K item = itemCounter.next();
+			V count = dayBeforeItemCount.get(item);
+			String itemString = (String) item;
+			Integer counter = Integer.parseInt(String.valueOf(count));
+			out.printf("Item: %15s Count: %3d\n", itemString, counter);
+		}
+		
+		out.println("Day Before Order Prices");
+		
+		int i = 1;
+		for (Iterator<Double> orders = yesterdaysOrders.iterator(); orders.hasNext();) {
+			double itemPrice = orders.next();
+			out.printf("Order #%d - Price: $%.2f\n" , i++ , itemPrice);
+		}
+		
+		out.flush();
+		out.close();
+		
+		System.out.println("Yesterday's Stats Saved To " + yesterdayStatsFile.getAbsolutePath());
 	}
 	
 	

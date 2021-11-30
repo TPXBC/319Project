@@ -99,8 +99,10 @@ public class RasGUI<S, K, V> {
 	/**
 	 * Adds Table Button
 	 * Table Button Leads to Host and Server Option
+	 * @throws Exception 
 	 */
-	public void addTableButton() {
+	public void addTableButton() throws Exception {
+		order = new OrderGUI(ras.getTableCount(), ras);
 		tableButton = new JButton("Tables");
 		tableButton.setSize(75, 75);
 		RASpanel.add(tableButton);
@@ -380,7 +382,6 @@ public class RasGUI<S, K, V> {
 	 * @throws Exception 
 	 */
 	private void openOrder(JPanel panel) throws Exception {
-		order = new OrderGUI(ras.getTableCount(), ras);
 		JButton orderButton = new JButton("Order");
 		orderButton.setSize(75, 75);
 		panel.add(orderButton);
@@ -468,6 +469,7 @@ public class RasGUI<S, K, V> {
 					manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 					statsButton();
+					dayBeforeStatsButton();
 					manageFrame.setContentPane(managePanel);
 					manageFrame.setVisible(true);
 				} else {
@@ -485,16 +487,33 @@ public class RasGUI<S, K, V> {
 				
 				statsButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
 						try {
 							order.rasStats.outputStatistics();
 						} catch (FileNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
+				});
+			}
+			
+			/**
+			 * Prints Day Before Statistics
+			 */
+			public void dayBeforeStatsButton() {
+				JButton dayBeforeStats = new JButton("View Yesterdays Stats");
+				managePanel.add(dayBeforeStats);
+				
+				dayBeforeStats.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						try {
+							order.rasStats.outputYesterdayStatistics();
+						} catch (FileNotFoundException e1) {
+							e1.printStackTrace();
+						}
+					}
+					
 				});
 			}
 			
