@@ -8,16 +8,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 import javax.swing.*;
 
 import data.BSTDictionary;
+import data.RasLogs;
 import data.Table;
 import ras.RAS;
 
 public class RasGUI<S, K, V> {
+	
 	RAS ras;
 	OrderGUI order;
 	
@@ -48,7 +51,8 @@ public class RasGUI<S, K, V> {
 	JPanel serverPanel = new JPanel();
 	JPanel hostPanel = new JPanel();
 	
-	Boolean fileChosen = false;
+	JFrame manageFrame = new JFrame();
+	JPanel managePanel = new JPanel();
 	
 	Button[] button;	
 	
@@ -61,7 +65,7 @@ public class RasGUI<S, K, V> {
 		
 		
 		mainWindow.fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		
+
 		int result = mainWindow.fileChooser.showOpenDialog(null);
 		
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -72,6 +76,7 @@ public class RasGUI<S, K, V> {
 
 		
 		mainWindow.ras = new RAS(mainWindow.file);
+		
 		mainWindow.button = new Button[mainWindow.ras.getTableCount()];
 		
 		
@@ -142,8 +147,11 @@ public class RasGUI<S, K, V> {
 		for (int i = 0; i < ras.getTableCount(); i++) {
 			int k = i+1;
 			button[i] = new Button("Table: " + k);
+			
 			button[i].setBackground(Color.red);
+			
 			tablesPanel.add(button[i]);
+			
 			button[i].addActionListener((ActionListener) new ActionListener() {
 
 				/**
@@ -152,7 +160,9 @@ public class RasGUI<S, K, V> {
 				 * Server Option - The Window Will Allow a Server to Add Orders, Process Payment, and Print Receipt
 				 */
 				public void actionPerformed(ActionEvent e) {
+					
 					tableNum = k;
+					
 					if (tBTNClicks == 0) {
 						tBTNClicks += 1;
 						singleTableFrame.setTitle("Table: " + (tableNum));
@@ -162,11 +172,9 @@ public class RasGUI<S, K, V> {
 						addGreeterButton();
 						addWaitstaffButton();
 						singleTableFrame.setContentPane(singleTablePanel);
-						///singleTableFrame.setLocationRelativeTo(null);
 						singleTableFrame.setVisible(true);
-						System.out.println(k);
 					} else {
-						mainFrameSetup();
+						greeterWaitFrameSetup();
 					}
 				}
 				
@@ -175,54 +183,10 @@ public class RasGUI<S, K, V> {
 	}
 	
 	/**
-	 * Sets Table to Unassigned Color Coding
-	 * @param tableNum
-	 */
-	public void setTableUnassigned() {
-		button[tableNum-1].setBackground(Color.red);
-	}
-	
-	/**
-	 * Sets Table to Assigned Color Coding
-	 * @param tableNum
-	 */
-	public void setTableAssigned() {
-		button[tableNum-1].setBackground(Color.blue);
-	}
-	
-	/**
-	 * Sets Table to Ordered Color Coding
-	 * @param tableNum
-	 */
-	public void setTableOrdered() {
-		button[tableNum-1].setBackground(Color.yellow);
-	}
-	
-	/**
-	 * Sets Table to Order-Ready Color Coding
-	 * @param tableNum
-	 */
-	public void setTableOrderReady() {
-		button[tableNum-1].setBackground(Color.cyan);
-	}
-	
-	/**
-	 * Sets Table to Order Completed Color Coding
-	 * @param tableNum
-	 */
-	public void setTableOrderCompleted() {
-		button[tableNum-1].setBackground(Color.green);
-	}
-	
-	/*
-	 * New Window Table Window
-	 */
-	
-	/**
 	 * READJUST FRAME
 	 * Adjusts Frame to the Original Frame Without Re-adding Buttons
 	 */
-	private void mainFrameSetup() {
+	private void greeterWaitFrameSetup() {
 		singleTableFrame.setTitle("Table: " + (tableNum));
 		singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		singleTableFrame.setSize(400, 550);
@@ -230,6 +194,68 @@ public class RasGUI<S, K, V> {
 		singleTableFrame.setContentPane(singleTablePanel);
 		singleTableFrame.setVisible(true);
 	}
+	
+	private void mainFrameSetup() {
+		RASframe.setSize(400, 550);
+		RASpanel.setLayout(new GridLayout(3, 0, 5, 5));
+		RASpanel.setBounds(100, 100, 100, 100);
+		RASframe.add(BorderLayout.CENTER, RASpanel);
+		RASframe.setVisible(true);
+	}
+	
+	private void manageFrameSetup() {
+		manageFrame.setTitle("Management Window");
+		manageFrame.setSize(400, 550);
+		manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		managePanel.setLayout(new GridLayout(4, 1, 5, 5));
+		manageFrame.setContentPane(managePanel);
+		manageFrame.setVisible(true);
+	}
+	
+	/**
+	 * Sets Table to Unassigned Color Coding
+	 * @param tableNum
+	 */
+	public void setTableUnassigned(int tableNum) {
+		this.button[tableNum-1].setBackground(Color.red);
+	}
+	
+	/**
+	 * Sets Table to Assigned Color Coding
+	 * @param tableNum
+	 */
+	public void setTableAssigned(int tableNum) {
+		this.button[tableNum-1].setBackground(Color.blue);
+	}
+	
+	/**
+	 * Sets Table to Ordered Color Coding
+	 * @param tableNum
+	 */
+	public void setTableOrdered(int tableNum) {
+		this.button[tableNum-1].setBackground(Color.yellow);
+	}
+	
+	/**
+	 * Sets Table to Order-Ready Color Coding
+	 * @param tableNum
+	 */
+	public void setTableOrderReady(int tableNum) {
+		this.button[tableNum-1].setBackground(Color.cyan);
+	}
+	
+	/**
+	 * Sets Table to Order Completed Color Coding
+	 * @param tableNum
+	 */
+	public void setTableOrderCompleted(int tableNum) {
+		this.button[tableNum-1].setBackground(Color.green);
+	}
+	
+	/*
+	 * New Window Table Window
+	 */
+	
 	
 	/**
 	 * Adds Server Button to New Frame
@@ -251,9 +277,13 @@ public class RasGUI<S, K, V> {
 					singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					singleTableFrame.setSize(400, 550);
 					serverPanel.setLayout(new GridLayout(5,0,5,5));
-					openOrder(serverPanel);
+					try {
+						openOrder(serverPanel);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 					clearTable(serverPanel);
-					backButton(serverPanel);
+					backButton(serverPanel, 1);
 					singleTableFrame.setContentPane(serverPanel);
 					singleTableFrame.setVisible(true);
 				} else {
@@ -298,8 +328,13 @@ public class RasGUI<S, K, V> {
 					hostPanel.setLayout(new GridLayout(5, 0, 5, 5));
 					assignTable();
 					clearTable(hostPanel);
-					openOrder(hostPanel);
-					backButton(hostPanel);
+					try {
+						openOrder(hostPanel);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					backButton(hostPanel, 1);
 					singleTableFrame.setContentPane(hostPanel);
 					singleTableFrame.setVisible(true);
 				} else {
@@ -333,7 +368,7 @@ public class RasGUI<S, K, V> {
 		assignTableButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				setTableAssigned();
+				setTableAssigned(tableNum);
 			}
 			
 		});
@@ -342,8 +377,9 @@ public class RasGUI<S, K, V> {
 	/**
 	 * HOST AND SERVER BUTTON
 	 * Button to Take Orders of That Table
+	 * @throws Exception 
 	 */
-	private void openOrder(JPanel panel) {
+	private void openOrder(JPanel panel) throws Exception {
 		order = new OrderGUI(ras.getTableCount(), ras);
 		JButton orderButton = new JButton("Order");
 		orderButton.setSize(75, 75);
@@ -368,7 +404,7 @@ public class RasGUI<S, K, V> {
 		clearTableButton.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
-				setTableUnassigned();
+				setTableUnassigned(tableNum);
 				
 			}
 		});
@@ -378,7 +414,7 @@ public class RasGUI<S, K, V> {
 	 * HOST AND SERVER PANEL BUTTON
 	 * Back Button That Reloads the Main Frame
 	 */
-	public void backButton(JPanel panel) {
+	public void backButton(JPanel panel, int num ) {
 		JButton backButton = new JButton("Back");
 		backButton.setSize(200, 200);
 		panel.add(backButton);
@@ -389,7 +425,11 @@ public class RasGUI<S, K, V> {
 			 * Sends User Back to Main Frame
 			 */
 			public void actionPerformed(ActionEvent e) {
-				mainFrameSetup();
+				if (num == 0) {
+					mainFrameSetup();
+				} else if (num == 1) {
+					greeterWaitFrameSetup();
+				}
 			}
 		});
 	}
@@ -416,6 +456,49 @@ public class RasGUI<S, K, V> {
 		manager = new JButton("Manager");
 		manager.setSize(75, 75);
 		RASpanel.add(manager);
+		
+		manager.addActionListener(new ActionListener() {
+
+			int i = 0;
+			public void actionPerformed(ActionEvent arg0) {
+				if(i == 0) {
+					i++;
+					manageFrame.setTitle("Management Window");
+					manageFrame.setSize(400, 550);
+					manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+					managePanel.setLayout(new GridLayout(4, 1, 5, 5));
+					statsButton();
+					manageFrame.setContentPane(managePanel);
+					manageFrame.setVisible(true);
+				} else {
+					manageFrameSetup();
+				}
+
+			}
+			
+			/**
+			 * Prints the Statistics of the Restaurant
+			 */
+			public void statsButton() {
+				JButton statsButton = new JButton("View Statistics");
+				managePanel.add(statsButton);
+				
+				statsButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						try {
+							order.rasStats.outputStatistics();
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+			}
+			
+		});
 	}
 	
 }

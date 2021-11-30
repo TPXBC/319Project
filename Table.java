@@ -15,10 +15,10 @@ public class Table implements Order {
 	
 	private double subTotal;
 	private double tipAmnt;
-	private double changeDue;
 	
 	int indexCounter;
 	int tableNum;
+	int orderCounter = 0;
 	
 	/**
 	 * No Param Constructor
@@ -86,9 +86,9 @@ public class Table implements Order {
 	public void printReceipt() {
 		if (!menuItem.isEmpty()) {
 			if (tableNum > 10) {
-				System.out.printf(" ____Table: %d %15s___\n" , tableNum,  "ORDER RECEIPT");
+				System.out.printf(" ___Table: %d #: %d %8s_\n" , tableNum, orderCounter, "ORDER RECEIPT");
 			} else {
-				System.out.printf(" ____Table: %d %15s____\n" , tableNum,  "ORDER RECEIPT");
+				System.out.printf(" ____Table: %d #: %d %7s_\n" , tableNum, orderCounter, "ORDER RECEIPT");
 			}
 			for(int i = 0; i < menuItem.size(); i++) {
 				String item = menuItem.get(i);
@@ -121,13 +121,6 @@ public class Table implements Order {
 		return subTotal;
 	}
 	
-	/**
-	 * Return Total Tip Amount
-	 * @return
-	 */
-	public double getTip() {
-		return tipAmnt;
-	}
 	
 	/**
 	 * Resets Arrays
@@ -166,4 +159,22 @@ public class Table implements Order {
 		}
 		System.out.printf("%.2f \n", avgPriceTest / menuPrice.size());
 	}
+	
+	/**
+	 * Returns Amount of Orders to Occur at This Table
+	 * @return
+	 */
+	public int getOrderCounter() {
+		return orderCounter;
+	}
+	
+	/**
+	 * Used to Increase Number of Orders at This Table
+	 */
+	public void increaseOrderCounter() {
+		orderCounter++;
+	}
+	
+	
+	
 }

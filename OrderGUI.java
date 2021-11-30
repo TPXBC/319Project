@@ -2,11 +2,9 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
-import java.awt.Checkbox;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -15,19 +13,25 @@ import javax.swing.*;
 import data.BSTDictionary;
 import data.Table;
 import ras.RAS;
-
+import data.RasLogs;
 /**
  * GUI Window That Handles Taking Orders at Table
- * @author COSC319 RAS Group
+ * @author Christian
+ * @param <K>
  * @param <V>
  */
-public class OrderGUI<V> extends RasGUI {
+public class OrderGUI<K, V> extends RasGUI {
 	int number;
-	double subtotal;
+	
+	Integer orderNum;
+	
+	Double subtotal;
 	
 	Table tableNode;
 	Table [] table;
+	
 	RAS ras;
+	RasLogs rasStats;
 	
 	
 	JFrame qrPayFrame = new JFrame();
@@ -59,16 +63,23 @@ public class OrderGUI<V> extends RasGUI {
 	JPanel dessertsPanel = new JPanel();
 	JPanel sidesPanel = new JPanel();
 	
-	Button[] button = new Button[100];	
+	Button[] button = new Button[100];
+	Button[] spare;
 	
 	/**
 	 * Constructor Setting the Outline of the Window
+	 * @throws Exception 
 	 */
-	public OrderGUI(int tableCount, RAS ras) {
+	public OrderGUI(int tableCount, RAS ras) throws Exception {
+		
+		super();
 		this.ras = ras;
+		rasStats = new RasLogs();
+		
 		OrderFrame.setTitle("Order Menu");
 		OrderFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		OrderFrame.setSize(400, 550);
+		
 		///OrderFrame.setLocationRelativeTo(null);
 		MainOrderPanel.setLayout(new GridLayout(8, 8, 5, 5));
 		OrderFrame.add(BorderLayout.CENTER, MainOrderPanel);
@@ -80,6 +91,7 @@ public class OrderGUI<V> extends RasGUI {
 		addSidesButton();
 		printReceipt();
 		processPayment();
+		
 		//printAvgPrice(); ##Test Button Not in Final Product
 		setTables(tableCount);
 	}
@@ -98,7 +110,9 @@ public class OrderGUI<V> extends RasGUI {
 	 * Method to Call to Show Window
 	 */
 	public void showOrderWindow(int tableNum) {
+		spare = button;
 		number = tableNum;
+		tableNode = table[tableNum -1];
 		OrderFrame.setVisible(true);
 	}
 	
@@ -297,6 +311,9 @@ public class OrderGUI<V> extends RasGUI {
 				public void actionPerformed(ActionEvent e) {
 					tableNode = table[number-1];
 					System.out.println(tableNode.addItem(menu, menuItem));
+					
+					rasStats.addItemCount(menuItem);
+					
 					table[number-1] = tableNode;
 				}
 			});
@@ -437,7 +454,7 @@ public class OrderGUI<V> extends RasGUI {
 					subtotal = tableNode.printSubTotal();
 					
 					cashPayPanel.setLayout(new GridLayout(6,1,5,5));
-					cashPayPanelJr.setLayout(new GridLayout(5,5,5,5));
+					cashPayPanelJr.setLayout(new GridLayout(8,1,5,5));
 					
 					
 					cashPayFrame.add(BorderLayout.WEST, cashPayPanel);
@@ -450,11 +467,16 @@ public class OrderGUI<V> extends RasGUI {
 					hundredDollarButton();
 					backButton(cashPayPanel);
 					
+					customPayLabel();
 					customPayField();
 					customPayButton();
+					tipPayLabel();
 					tipPayField();
 					tipPayButton();
+					changeDuePayLabel();
 					changeDuePayField();
+					
+					customPayField.setText(String.format("%.2f", 0.00));
 					changeDuePayField.setText(String.format("Total Due: $%.2f", subtotal));
 					
 					cashPayFrame.setVisible(true);
@@ -467,6 +489,9 @@ public class OrderGUI<V> extends RasGUI {
 				
 			}
 			
+			/**
+			 * Used After Cash Window Has Been Opened
+			 */
 			private void mainCashFrame() {
 				cashPayFrame.setTitle("Payment Menu");
 				cashPayFrame.setSize(400, 550);
@@ -475,20 +500,23 @@ public class OrderGUI<V> extends RasGUI {
 				
 				tableNode = table[number - 1];
 				subtotal = tableNode.printSubTotal();
+				customPayField.setText(String.format("%.2f", 0.00));
 				changeDuePayField.setText(String.format("Total Due: $%.2f", subtotal));
 				
 				cashPayFrame.setVisible(true);
 			}
 			
+			/**
+			 * Adds Five Dollar Button
+			 */
 			private void fiveDollarButton() {
 				JButton fiveDollarButton = new JButton("$5.00");
 				cashPayPanel.add(fiveDollarButton);
 				
 				fiveDollarButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+						
 						if (customPayField.getText().isEmpty()) {
 							customPayField.setText("5.00");
 						} else {
@@ -503,15 +531,17 @@ public class OrderGUI<V> extends RasGUI {
 				
 			}
 			
+			/**
+			 * Adds Ten Dollar Button
+			 */
 			private void tenDollarButton() {
 				JButton tenDollarButton = new JButton("$10.00");
 				cashPayPanel.add(tenDollarButton);
 				
 				tenDollarButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+						
 						if (customPayField.getText().isEmpty()) {
 							customPayField.setText("10.00");
 						} else {
@@ -526,15 +556,17 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Adds Twenty Dollar Button
+			 */
 			private void twentyDollarButton() {
 				JButton twentyDollarButton = new JButton("$20.00");
 				cashPayPanel.add(twentyDollarButton);
 				
 				twentyDollarButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+
 						if (customPayField.getText().isEmpty()) {
 							customPayField.setText("20.00");
 						} else {
@@ -550,15 +582,17 @@ public class OrderGUI<V> extends RasGUI {
 				
 			}
 			
+			/**
+			 * Adds Fifty Dollar Button
+			 */
 			private void fiftyDollarButton() {
 				JButton fiftyDollarButton = new JButton("$50.00");
 				cashPayPanel.add(fiftyDollarButton);
 				
 				fiftyDollarButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+
 						if (customPayField.getText().isEmpty()) {
 							customPayField.setText("50.00");
 						} else {
@@ -573,15 +607,18 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Adds Hundred Dollar Button
+			 */
 			private void hundredDollarButton() {
 				JButton hundredDollarButton = new JButton("$100.00");
 				cashPayPanel.add(hundredDollarButton);
 				
 				hundredDollarButton.addActionListener(new ActionListener() {
 
-					@Override
+					
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+						
 						if (customPayField.getText().isEmpty()) {
 							customPayField.setText("100.00");
 						} else {
@@ -597,21 +634,28 @@ public class OrderGUI<V> extends RasGUI {
 				
 			}
 			
+			/**
+			 * Adds Button to Confirm Cash Amount Paid
+			 */
 			private void customPayButton() {
 				JButton selfPayButton = new JButton("Enter Amount");
 				cashPayPanelJr.add(selfPayButton);
 				
 				selfPayButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
 						Double customAmnt = Double.parseDouble(customPayField.getText());
 						Double changeDue = subtotal - customAmnt;
 						if (changeDue <= 0.0) {
+							
 							changeDuePayField.setText(String.format("Change Owed:  $%.2f", changeDue));
+							
+							tableNode.increaseOrderCounter();
 							tableNode.printReceipt();
+							rasStats.addPriceStatistics(subtotal);
 							tableNode.clearTable();
+							
 						} else if (changeDue > 0){
 							changeDuePayField.setText(String.format("Still Owed: $%.2f", changeDue));
 						} else {
@@ -623,24 +667,35 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
-			
+			/**
+			 * Creates Paid Amount TextField
+			 */
 			private void customPayField() {
 				customPayField = new JTextField();
 				cashPayPanelJr.add(customPayField);
 				
 			}
 			
+			/**
+			 * Creates Paid Amount Label
+			 */
+			private void customPayLabel() {
+				JLabel customPayLabel = new JLabel("Enter Amount or Press Enter When Equal");
+				cashPayPanelJr.add(customPayLabel);
+			}
+			
+			/**
+			 * Adds Button For Adding Tips
+			 */
 			private void tipPayButton() {
 				JButton tipPayButton = new JButton("Enter Tip Amount");
 				cashPayPanelJr.add(tipPayButton);
 				
 				tipPayButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						if (tipPayField.getText().isEmpty()) {
-							tipPayField.setText(String.format("$%.2f", 0));
+						if (tipPayField.getText().isBlank()) {
+							tipPayField.setText(String.format("$%.2f", 0.00));
 						} else {
 							Double tipAmnt = Double.parseDouble(tipPayField.getText());
 							tableNode.addTip(tipAmnt);
@@ -658,16 +713,38 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/*
+			 * Creates Tip TextField
+			 */
 			private void tipPayField() {
 				tipPayField = new JTextField();
 				cashPayPanelJr.add(tipPayField);
 				
 			}
 			
+			/**
+			 * Creates Tip Pay Label on GUI Window
+			 */
+			private void tipPayLabel() {
+				JLabel tipPayLabel = new JLabel("Leave a Tip? ");
+				cashPayPanelJr.add(tipPayLabel);
+			}
+			
+			/**
+			 * Creates Change Due TextField
+			 */
 			private void changeDuePayField() {
 				changeDuePayField = new JTextField();
 				cashPayPanelJr.add(changeDuePayField);
 				
+			}
+			
+			/**
+			 * Creates Change Due Pay Label
+			 */
+			private void changeDuePayLabel() {
+				JLabel changeDuePayLabel = new JLabel("Change Due: ");
+				cashPayPanelJr.add(changeDuePayLabel);
 			}
 		});
 	}
@@ -707,6 +784,7 @@ public class OrderGUI<V> extends RasGUI {
 					tipPayField();
 					tipPayButton();
 					changeDuePayField();
+					backButton(qrPayPanelJr);
 				
 					customPayField.setText(String.format("Paying: %.2f", subtotal));
 					tipPayField.setText(" ");
@@ -718,6 +796,9 @@ public class OrderGUI<V> extends RasGUI {
 				}
 			}
 			
+			/**
+			 * Used After QR Payment Window Has Been Created
+			 */
 			private void qrMainSetUp() {
 				qrPayFrame.setTitle("Payment Menu");
 				qrPayFrame.setSize(400, 550);
@@ -734,13 +815,15 @@ public class OrderGUI<V> extends RasGUI {
 				qrPayFrame.setVisible(true);
 			}
 			
+			/**
+			 * Method to Simulate valid QR Scan
+			 */
 			private void validQRScanButton() {
 				JButton validScanButton = new JButton("Valid QR Scan");
 				qrPayPanel.add(validScanButton);
 				
 				validScanButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
 						String payAmnt = customPayField.getText();
@@ -751,7 +834,9 @@ public class OrderGUI<V> extends RasGUI {
 						customPayField.setText(String.format("Paid: %.2f", paidAmnt));
 						changeDuePayField.setText(String.format("Total Due: $%.2f", restDue));
 						
+						tableNode.increaseOrderCounter();
 						tableNode.printReceipt();
+						rasStats.addPriceStatistics(subtotal);
 						tableNode.clearTable();
 					}
 					
@@ -759,13 +844,15 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Method to Simulate Invalid QR Scan
+			 */
 			private void invalidQRScanButton() {
 				JButton invalidScanButton = new JButton("Invalid QR Scan");
 				qrPayPanel.add(invalidScanButton);
 				
 				invalidScanButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
 						customPayField.setText(String.format("Paying: %.2f", subtotal));
@@ -776,24 +863,28 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
-			
+			/**
+			 * Adds Pay TextField
+			 */
 			private void customPayField() {
 				customPayField = new JTextField();
 				qrPayPanelJr.add(customPayField);
 				
 			}
 			
+			/**
+			 * Adds Tip Button
+			 */
 			private void tipPayButton() {
 				JButton tipPayButton = new JButton("Enter Tip Amount");
 				qrPayPanelJr.add(tipPayButton);
 				
 				tipPayButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						if (tipPayField.getText().isEmpty()) {
-							tipPayField.setText(String.valueOf(0));
+						
+						if (tipPayField.getText().isBlank()) {
+							tipPayField.setText(String.format("%.2f", 0.00));
 						} else {
 							Double tipAmnt = Double.parseDouble(tipPayField.getText());
 							tableNode.addTip(tipAmnt);
@@ -815,12 +906,18 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Creates the Tip Amount TextField
+			 */
 			private void tipPayField() {
 				tipPayField = new JTextField();
 				qrPayPanelJr.add(tipPayField);
 				
 			}
 			
+			/**
+			 * Creates the Change Due TextField
+			 */
 			private void changeDuePayField() {
 				changeDuePayField = new JTextField();
 				qrPayPanelJr.add(changeDuePayField);
@@ -867,6 +964,7 @@ public class OrderGUI<V> extends RasGUI {
 					tipPayField();
 					tipPayButton();
 					changeDuePayField();
+					backButton(debitPayPanelJr);
 				
 					customPayField.setText(String.format("Paying: %.2f", subtotal));
 					tipPayField.setText(" ");
@@ -878,6 +976,9 @@ public class OrderGUI<V> extends RasGUI {
 				}
 			}
 			
+			/**
+			 * Used After Debit Payment Window Has Already Been Created
+			 */
 			private void debitMainSetUp() {
 				debitPayFrame.setTitle("Payment Menu");
 				debitPayFrame.setSize(400, 550);
@@ -894,13 +995,15 @@ public class OrderGUI<V> extends RasGUI {
 				debitPayFrame.setVisible(true);
 			}
 			
+			/**
+			 * Simulates Valid Debit Card Scan
+			 */
 			private void validDebitScanButton() {
 				JButton validScanButton = new JButton("Valid Debit Scan");
 				debitPayPanel.add(validScanButton);
 				
 				validScanButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
 						String payAmnt = customPayField.getText();
@@ -911,7 +1014,9 @@ public class OrderGUI<V> extends RasGUI {
 						customPayField.setText(String.format("Paid: %.2f", paidAmnt));
 						changeDuePayField.setText(String.format("Total Due: $%.2f", restDue));
 						
+						tableNode.increaseOrderCounter();
 						tableNode.printReceipt();
+						rasStats.addPriceStatistics(subtotal);
 						tableNode.clearTable();
 						
 					}
@@ -920,13 +1025,15 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Simulates Invalid Debit Card Scan
+			 */
 			private void invalidDebitScanButton() {
 				JButton invalidScanButton = new JButton("Invalid Debit Scan");
 				debitPayPanel.add(invalidScanButton);
 				
 				invalidScanButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
 						customPayField.setText(String.format("Paying: %.2f", subtotal));
@@ -937,24 +1044,27 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
-			
+			/**
+			 * Creates Pay TextField
+			 */
 			private void customPayField() {
 				customPayField = new JTextField();
 				debitPayPanelJr.add(customPayField);
 				
 			}
 			
+			/**
+			 * Adds Tip Button to Add Tip Amount to Subtotal
+			 */
 			private void tipPayButton() {
 				JButton tipPayButton = new JButton("Enter Tip Amount");
 				debitPayPanelJr.add(tipPayButton);
 				
 				tipPayButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						if (tipPayField.getText().isEmpty()) {
-							tipPayField.setText(String.format("$%.2f", 0));
+						if (tipPayField.getText().isBlank()) {
+							tipPayField.setText(String.format("$%.2f", 0.00));
 						} else {
 							Double tipAmnt = Double.parseDouble(tipPayField.getText());
 							tableNode.addTip(tipAmnt);
@@ -976,12 +1086,18 @@ public class OrderGUI<V> extends RasGUI {
 				});
 			}
 			
+			/**
+			 * Creates the Tips TextField
+			 */
 			private void tipPayField() {
 				tipPayField = new JTextField();
 				debitPayPanelJr.add(tipPayField);
 				
 			}
 			
+			/**
+			 * Creates the Change Due TextField
+			 */
 			private void changeDuePayField() {
 				changeDuePayField = new JTextField();
 				debitPayPanelJr.add(changeDuePayField);
