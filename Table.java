@@ -54,7 +54,6 @@ public class Table implements Order {
 		this.menuItem.add(Item);
 		this.menuPrice.add(itemPrice);
 		subTotal = subTotal + itemPrice;
-		System.out.println(subTotal);
 		return Item;
 	}
 

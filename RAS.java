@@ -1,11 +1,9 @@
 /**
  * Prototype Class to Handle Config File and Add Menu Items
  * The Configuration File Should Consist of Table Count and Menu Items
- * RIGHT NOW THIS ONLY HANDLES SEATING AND ADDING MENU ITEMS
- * ORDER CLASS - FINISHED
- * DISPLAY-IN-KITCHEN - UNFINISHED
- * PAYMENT AND PROCESSING - UNFINISHED
- * NODE CLASS - FINISHED
+ * STILL NEEDED
+ * DISPLAY WINDOW
+ * PRINT RECEIPTS TO THEIR OWN FILE
  *
  */
 package ras;

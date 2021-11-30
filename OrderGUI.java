@@ -319,7 +319,7 @@ public class OrderGUI<K, V> extends RasGUI {
 
 				public void actionPerformed(ActionEvent e) {
 					tableNode = table[number - 1];
-					System.out.println(tableNode.addItem(menu, menuItem));
+					tableNode.addItem(menu, menuItem);
 
 					rasStats.addItemCount(menuItem);
 
@@ -704,9 +704,9 @@ public class OrderGUI<K, V> extends RasGUI {
 							if (customPayField.getText().isEmpty()) {
 								customPayField.setText(String.format("%.2f", tipAmnt));
 							} else {
-								Double currentAmnt = Double.parseDouble(customPayField.getText());
-								currentAmnt = currentAmnt + tipAmnt;
-								customPayField.setText(String.format("%.2f", currentAmnt));
+								subtotal = subtotal + tipAmnt;
+								changeDuePayField.setText(String.format("Total Due: $%.2f", subtotal));
+
 
 							}
 						}
