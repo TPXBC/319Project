@@ -43,8 +43,6 @@ public class RAS<S, K, V> {
 	 * Ints
 	 */
 	private int tableCount;
-	private int serverCount;
-	private int serverIndex;
 
 	private String line;
 

@@ -412,6 +412,38 @@ public class RasLogs<K, V> {
 
 	/**
 	 * Outputs Item Count of Each Ordered Menu Item
+	 * AT END OF DAY
+	 * @param timespan
+	 * @param start
+	 */
+	public void outputItemCountsAtEndOfDay(BSTDictionary<K, V> timespan, String start) {
+		
+		if (start.equals(itemCounters[1])) {
+			out.printf("%s\nDay: %d\n", start, ++daysofWeek);
+		} else if (start.equals(itemCounters[2])) {
+			out.printf("%s\nDay: %d\n", start, ++daysofMonth);
+		} else if (start.equals(itemCounters[3])) {
+			out.printf("%s\nDay: %d\n", start, ++daysofYear);
+		} else if (start.equals(itemCounters[0])) {
+			out.printf("%s\n", start);
+		} else {
+			System.out.println("Error in RasLogs.outputItemCounts()");
+			System.exit(0);
+		}
+
+		for (Iterator<K> itemCounter = timespan.keys(); itemCounter.hasNext();) {
+			K item = itemCounter.next();
+			V count = timespan.get(item);
+			String itemString = (String) item;
+			Integer counter = Integer.parseInt(String.valueOf(count));
+			out.printf("Item: %15s Count: %3d\n", itemString, counter);
+
+		}
+
+	}
+	
+	/**
+	 * Outputs Item Count of Each Ordered Menu Item
 	 * 
 	 * @param timespan
 	 * @param start
@@ -419,11 +451,11 @@ public class RasLogs<K, V> {
 	public void outputItemCounts(BSTDictionary<K, V> timespan, String start) {
 
 		if (start.equals(itemCounters[1])) {
-			out.printf("%s\nDay: %d\n", start, ++daysofWeek);
+			out.printf("%s\nDay: %d\n", start, daysofWeek);
 		} else if (start.equals(itemCounters[2])) {
-			out.printf("%s\nDay: %d\n", start, ++daysofMonth);
+			out.printf("%s\nDay: %d\n", start, daysofMonth);
 		} else if (start.equals(itemCounters[3])) {
-			out.printf("%s\nDay: %d\n", start, ++daysofYear);
+			out.printf("%s\nDay: %d\n", start, daysofYear);
 		} else if (start.equals(itemCounters[0])) {
 			out.printf("%s\n", start);
 		} else {
@@ -480,6 +512,89 @@ public class RasLogs<K, V> {
 			out.println("No Items Purchased Yet This Past Year");
 		} else {
 			outputItemCounts(yearlyItemCount, itemCounters[3]);
+		}
+		out.println(itemCounters[4]);
+		out.flush();
+		out.close();
+		System.out.println("Statistics Saved To " + statsFile.getAbsolutePath());
+
+		out = new PrintWriter(pricesFile);
+
+		if (dailyOrder.isEmpty()) {
+			out.println(itemCounters[0]);
+			out.println("No Orders Yet Today");
+		} else {
+			outputOrderPrices(dailyOrder, itemCounters[0]);
+		}
+
+		if (weeklyOrder.isEmpty()) {
+			out.println(itemCounters[1]);
+			out.println("No Orders Yet This Week");
+		} else {
+			outputOrderPrices(weeklyOrder, itemCounters[1]);
+		}
+
+		if (monthlyOrder.isEmpty()) {
+			out.println(itemCounters[2]);
+			out.println("No Orders Yet This Month");
+		} else {
+			outputOrderPrices(monthlyOrder, itemCounters[2]);
+		}
+
+		if (yearlyOrder.isEmpty()) {
+			out.println(itemCounters[3]);
+			out.println("No Orders Yet This Year");
+		} else {
+			outputOrderPrices(yearlyOrder, itemCounters[3]);
+		}
+
+		out.println(itemCounters[4]);
+		out.flush();
+		out.close();
+
+		System.out.println("Prices Saved To " + pricesFile.getAbsolutePath());
+		
+	}
+	
+	/**
+	 * Outputs Statistics to Stats File
+	 * AT END OF DAY
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	public void outputStatisticsAtEndOfDay() throws FileNotFoundException {
+		out = new PrintWriter(statsFile);
+		getAvgDailyPrices();
+		getAvgWeeklyPrices();
+		getAvgMonthlyPrices();
+		getAvgYearlyPrices();
+
+		if (dailyItemCount.isEmpty()) {
+			out.println(itemCounters[0]);
+			out.println("No Items Purchased Yet Today");
+		} else {
+			outputItemCountsAtEndOfDay(dailyItemCount, itemCounters[0]);
+		}
+
+		if (weeklyItemCount.isEmpty()) {
+			out.println(itemCounters[1]);
+			out.println("No Items Purchased Yet This Week");
+		} else {
+			outputItemCountsAtEndOfDay(weeklyItemCount, itemCounters[1]);
+		}
+
+		if (monthlyItemCount.isEmpty()) {
+			out.println(itemCounters[2]);
+			out.println("No Items Purchased Yet This Month");
+		} else {
+			outputItemCountsAtEndOfDay(monthlyItemCount, itemCounters[2]);
+		}
+
+		if (yearlyItemCount.isEmpty()) {
+			out.println(itemCounters[3]);
+			out.println("No Items Purchased Yet This Past Year");
+		} else {
+			outputItemCountsAtEndOfDay(yearlyItemCount, itemCounters[3]);
 		}
 		out.println(itemCounters[4]);
 		out.flush();

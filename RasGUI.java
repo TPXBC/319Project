@@ -475,6 +475,7 @@ public class RasGUI<S, K, V> {
 					manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 					statsButton();
+					endOfDayStatsButton();
 					dayBeforeStatsButton();
 					manageFrame.setContentPane(managePanel);
 					manageFrame.setVisible(true);
@@ -496,6 +497,25 @@ public class RasGUI<S, K, V> {
 					public void actionPerformed(ActionEvent e) {
 						try {
 							order.rasStats.outputStatistics();
+						} catch (FileNotFoundException e1) {
+							e1.printStackTrace();
+						}
+					}
+				});
+			}
+			
+			/**
+			 * Prints the Statistics of the Restaurant
+			 */
+			public void endOfDayStatsButton() {
+				JButton statsButton = new JButton("View End of Day Statistics");
+				managePanel.add(statsButton);
+
+				statsButton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						try {
+							order.rasStats.outputStatisticsAtEndOfDay();
 						} catch (FileNotFoundException e1) {
 							e1.printStackTrace();
 						}
