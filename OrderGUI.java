@@ -694,6 +694,16 @@ public class OrderGUI<K, V> extends RasGUI {
 								customPayField.setText(String.format("%.2f", tipAmnt));
 							} else {
 								subtotal = subtotal + tipAmnt;
+								
+								if (customPayField.getText().isEmpty()) {
+									customPayField.setText(String.format("%.2f", tipAmnt));
+								} else {
+									Double currentAmnt = Double.parseDouble(customPayField.getText());
+									currentAmnt = currentAmnt + tipAmnt;
+									customPayField.setText(String.format("%.2f", currentAmnt));
+
+								}
+								
 								changeDuePayField.setText(String.format("Total Due: $%.2f", subtotal));
 
 							}

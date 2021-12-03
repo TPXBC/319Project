@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,7 +79,7 @@ public class RasGUI<S, K, V> {
 
 		mainWindow.button = new Button[mainWindow.ras.getTableCount()];
 
-		mainWindow.RASframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.RASframe.setDefaultCloseOperation(mainWindow.RASframe.DO_NOTHING_ON_CLOSE);
 		mainWindow.RASframe.setSize(400, 550);
 		mainWindow.RASpanel.setLayout(new GridLayout(3, 0, 5, 5));
 		mainWindow.RASpanel.setBounds(100, 100, 100, 100);
@@ -85,7 +87,23 @@ public class RasGUI<S, K, V> {
 		mainWindow.addKitchenButton();
 		mainWindow.addManagerButton();
 		mainWindow.RASframe.add(BorderLayout.CENTER, mainWindow.RASpanel);
+		
 		mainWindow.RASframe.setVisible(true);
+		
+		mainWindow.RASframe.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					mainWindow.order.rasStats.outputStatisticsAtEndOfDay();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				mainWindow.RASframe.dispose();
+				System.exit(0);
+				
+			}
+		});
+		
 
 	}
 
