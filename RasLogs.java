@@ -54,7 +54,20 @@ public class RasLogs<K, V> {
 		file = new File("statistics");
 		file.mkdir();
 		
-		statsFile = new File("statistics\\StatsFile.txt");
+		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			System.out.println("Windows OS Detected");
+			statsFile= new File("statistics\\StatsFile.txt");
+			pricesFile = new File("statistics\\PricesFile.txt");
+			yesterdayStatsFile = new File("statistics\\YesterdayStatsFile.txt");
+		}  else if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+			System.out.println("Linux OS Detected");
+			statsFile= new File("statistics/StatsFile.txt");
+			pricesFile = new File("statistics/PricesFile.txt");
+			yesterdayStatsFile = new File("statistics/YesterdayStatsFile.txt");
+		}  else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			System.out.println("We Dont Associate With Apple");
+		}
+		
 		if (statsFile.createNewFile()) {
 			System.out.println("Stats File Created In " + statsFile.getAbsolutePath());
 		} else {
@@ -71,7 +84,6 @@ public class RasLogs<K, V> {
 			loadFileItemCountStats(yearlyItemCount, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		pricesFile = new File("statistics\\PricesFile.txt");
 		if (pricesFile.createNewFile()) {
 			System.out.println("Prices File Created In " + pricesFile.getAbsolutePath());
 		} else {
@@ -88,7 +100,6 @@ public class RasLogs<K, V> {
 			loadFilePricingStats(yearlyOrder, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		yesterdayStatsFile = new File("statistics\\YesterdayStatsFile.txt");
 		if (yesterdayStatsFile.createNewFile()) {
 			System.out.println("Yesterday's Stats File Created In " + yesterdayStatsFile.getAbsolutePath());
 		} else {
