@@ -115,7 +115,7 @@ public class RasGUI<S, K, V> {
 	 * @throws Exception
 	 */
 	public void addTableButton() throws Exception {
-		order = new OrderGUI(ras.getTableCount(), ras);
+		order = new OrderGUI(ras.getTableCount(), ras, button);
 		tableButton = new JButton("Tables");
 
 		RASpanel.add(tableButton);
@@ -149,7 +149,6 @@ public class RasGUI<S, K, V> {
 
 		} else {
 
-			tablesFrame = new JFrame("Tables Window");
 			tablesFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
 			tablesPanel.setLayout(new GridLayout(10, 3, 5, 5));
@@ -168,7 +167,7 @@ public class RasGUI<S, K, V> {
 			int k = i + 1;
 			button[i] = new Button("Table: " + k);
 
-			button[i].setBackground(Color.red);
+			order.setTableUnassigned(i+1);
 
 			tablesPanel.add(button[i]);
 
@@ -237,51 +236,6 @@ public class RasGUI<S, K, V> {
 		managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 		manageFrame.setContentPane(managePanel);
 		manageFrame.setVisible(true);
-	}
-
-	/**
-	 * Sets Table to Unassigned Color Coding
-	 *
-	 * @param tableNum
-	 */
-	public void setTableUnassigned(int tableNum) {
-		this.button[tableNum - 1].setBackground(Color.red);
-	}
-
-	/**
-	 * Sets Table to Assigned Color Coding
-	 *
-	 * @param tableNum
-	 */
-	public void setTableAssigned(int tableNum) {
-		this.button[tableNum - 1].setBackground(Color.blue);
-	}
-
-	/**
-	 * Sets Table to Ordered Color Coding
-	 *
-	 * @param tableNum
-	 */
-	public void setTableOrdered(int tableNum) {
-		this.button[tableNum - 1].setBackground(Color.yellow);
-	}
-
-	/**
-	 * Sets Table to Order-Ready Color Coding
-	 *
-	 * @param tableNum
-	 */
-	public void setTableOrderReady(int tableNum) {
-		this.button[tableNum - 1].setBackground(Color.cyan);
-	}
-
-	/**
-	 * Sets Table to Order Completed Color Coding
-	 *
-	 * @param tableNum
-	 */
-	public void setTableOrderCompleted(int tableNum) {
-		this.button[tableNum - 1].setBackground(Color.green);
 	}
 
 	/*
@@ -400,7 +354,7 @@ public class RasGUI<S, K, V> {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setTableAssigned(tableNum);
+				order.setTableAssigned(tableNum);
 			}
 
 		});
@@ -436,7 +390,7 @@ public class RasGUI<S, K, V> {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setTableUnassigned(tableNum);
+				order.setTableUnassigned(tableNum);
 
 			}
 		});
@@ -498,7 +452,6 @@ public class RasGUI<S, K, V> {
 					i++;
 					manageFrame.setTitle("Management Window");
 					manageFrame.setSize(400, 550);
-					manageFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 					managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 					statsButton();
 					endOfDayStatsButton();

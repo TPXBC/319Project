@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,15 +64,17 @@ public class OrderGUI<K, V> extends RasGUI {
 	JPanel sidesPanel = new JPanel();
 
 	Button[] button = new Button[100];
+	Button[] spare;
 
 	/**
 	 * Constructor Setting the Outline of the Window
 	 *
 	 * @throws Exception
 	 */
-	public OrderGUI(int tableCount, RAS ras) throws Exception {
+	public OrderGUI(int tableCount, RAS ras, Button[] button) throws Exception {
 
 		super();
+		spare = button;
 		this.ras = ras;
 		rasStats = new RasLogs();
 
@@ -88,6 +91,7 @@ public class OrderGUI<K, V> extends RasGUI {
 		addEntreesButton();
 		addDessertsButton();
 		addSidesButton();
+		sendOrder();
 		printReceipt();
 		processPayment();
 
@@ -334,6 +338,22 @@ public class OrderGUI<K, V> extends RasGUI {
 		}
 	}
 
+	private void sendOrder() {
+		JButton sendOrder = new JButton("Submit Order");
+		orderPanel.add(sendOrder);
+		
+		sendOrder.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setTableOrdered(number);
+				
+			}
+			
+		});
+	}
+	
+	
 	/**
 	 * Creates Button to Print Receipt Prints Receipt in Console and Outputs to New
 	 * File
@@ -708,7 +728,7 @@ public class OrderGUI<K, V> extends RasGUI {
 									e1.printStackTrace();
 								}
 
-								rasStats.addPriceStatistics(subtotal);
+								rasStats.addPriceStatistics(tableNode.printSubTotal());
 								tableNode.clearTable();
 
 								table[number - 1] = tableNode;
@@ -718,6 +738,9 @@ public class OrderGUI<K, V> extends RasGUI {
 								} catch (FileNotFoundException e1) {
 									e1.printStackTrace();
 								}
+								
+								setTableUnassigned(number);
+								
 							} else {
 								changeDuePayField.setText("Invalid Payment Entry");
 							}
@@ -749,7 +772,7 @@ public class OrderGUI<K, V> extends RasGUI {
 							e1.printStackTrace();
 						}
 
-						rasStats.addPriceStatistics(subtotal);
+						rasStats.addPriceStatistics(tableNode.printSubTotal());
 						tableNode.clearTable();
 						
 						table[number - 1] = tableNode;
@@ -759,6 +782,8 @@ public class OrderGUI<K, V> extends RasGUI {
 						} catch (FileNotFoundException e1) {
 							e1.printStackTrace();
 						}
+						
+						setTableUnassigned(number);
 						
 						customPayField.setText(String.format("Paid $%.2f", subtotal));
 						changeDuePayField.setText(String.format("Total Due: $%.2f", 0.00));
@@ -809,8 +834,9 @@ public class OrderGUI<K, V> extends RasGUI {
 							e1.printStackTrace();
 						}
 
-						rasStats.addPriceStatistics(subtotal);
+						rasStats.addPriceStatistics(tableNode.printSubTotal());
 						tableNode.clearTable();
+						
 						
 						table[number - 1] = tableNode;
 
@@ -819,6 +845,8 @@ public class OrderGUI<K, V> extends RasGUI {
 						} catch (FileNotFoundException e1) {
 							e1.printStackTrace();
 						}
+						
+						setTableUnassigned(number);
 						
 						customPayField.setText(String.format("Paid $%.2f", subtotal));
 						changeDuePayField.setText(String.format("Total Due: $%.2f", 0.00));
@@ -847,6 +875,42 @@ public class OrderGUI<K, V> extends RasGUI {
 			}
 
 		});
+	}
+	
+	/**
+	 * Sets Table to Unassigned Color Coding
+	 *
+	 * @param tableNum
+	 */
+	public void setTableUnassigned(int tableNum) {
+		spare[tableNum - 1].setBackground(Color.red);
+	}
+
+	/**
+	 * Sets Table to Assigned Color Coding
+	 *
+	 * @param tableNum
+	 */
+	public void setTableAssigned(int tableNum) {
+		spare[tableNum - 1].setBackground(Color.yellow);
+	}
+
+	/**
+	 * Sets Table to Ordered Color Coding
+	 *
+	 * @param tableNum
+	 */
+	public void setTableOrdered(int tableNum) {
+		spare[tableNum - 1].setBackground(Color.cyan);
+	}
+
+	/**
+	 * Sets Table to Order-Ready Color Coding
+	 *
+	 * @param tableNum
+	 */
+	public void setTableOrderReady(int tableNum) {
+		spare[tableNum - 1].setBackground(Color.green);
 	}
 
 }
