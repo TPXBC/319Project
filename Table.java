@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * 
  * Node Like Class Handling Per Table Orders
+ * @author Restaurant Automation Inc.
  * 
  */
 public class Table implements Order {

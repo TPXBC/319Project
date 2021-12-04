@@ -2,7 +2,7 @@ package data;
 
 /**
  * Order Interface
- * @author Christian
+ * @author Restaurant Automation Inc
  */
 public interface Order {
 	

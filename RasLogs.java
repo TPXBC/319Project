@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  * Class Used By RAS System to Record Order Statistics
- * @author Etter
+ * @author Restaurant Automation Inc.
  *
  * @param <K>
  * @param <V>

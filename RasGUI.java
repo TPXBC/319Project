@@ -20,6 +20,14 @@ import javax.swing.WindowConstants;
 import data.Table;
 import ras.RAS;
 
+/**
+ * Main GUI Class for the Restaurant Automation System
+ * @author Restaurant Automation Inc.
+ *
+ * @param <S>
+ * @param <K>
+ * @param <V>
+ */
 public class RasGUI<S, K, V> {
 
 	RAS ras;

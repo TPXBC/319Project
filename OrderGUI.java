@@ -24,7 +24,7 @@ import ras.RAS;
 /**
  * GUI Window That Handles Taking Orders at Table
  *
- * @author Christian
+ * @author Restaurant Automation Inc.
  * @param <K>
  * @param <V>
  */

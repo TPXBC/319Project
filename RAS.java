@@ -1,11 +1,3 @@
-/**
- * Prototype Class to Handle Config File and Add Menu Items
- * The Configuration File Should Consist of Table Count and Menu Items
- * STILL NEEDED
- * DISPLAY WINDOW
- * PRINT RECEIPTS TO THEIR OWN FILE
- *
- */
 package ras;
 
 import java.io.BufferedReader;
@@ -19,6 +11,15 @@ import java.util.Iterator;
 import GUI.RasGUI;
 import data.BSTDictionary;
 
+/**
+ * Restaurant Automation System Main Data Class
+ * Loads Menu Items and Table Count
+ * @author Restaurant Automation Inc.
+ *
+ * @param <S>
+ * @param <K>
+ * @param <V>
+ */
 public class RAS<S, K, V> {
 
 	/**

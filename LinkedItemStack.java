@@ -1,10 +1,14 @@
-/**
- * Linked Item Stack Class
- */
+
 package data;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Stack Class For Data
+ * @author Restaurant Automation Inc.
+ *
+ * @param <E>
+ */
 public class LinkedItemStack<E> {
 	private Node daTop;
 	private int noItems;
@@ -12,7 +16,7 @@ public class LinkedItemStack<E> {
 	
 	/**
 	 * Inner Node Class
-	 * @author Christian
+	 * @author Restuarant Automation Inc.
 	 *
 	 */
 	private class Node {
