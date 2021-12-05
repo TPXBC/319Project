@@ -1,24 +1,22 @@
-/**
- * Prototype Class to Handle Config File and Add Menu Items
- * The Configuration File Should Consist of Table Count and Menu Items
- * STILL NEEDED
- * DISPLAY WINDOW
- * PRINT RECEIPTS TO THEIR OWN FILE
- *
- */
-package ras;
+package RAS;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import GUI.RasGUI;
 import data.BSTDictionary;
 
+/**
+ * Restaurant Automation System Main Data Class
+ * Loads Menu Items and Table Count
+ * @author Restaurant Automation Inc.
+ *
+ * @param <S>
+ * @param <K>
+ * @param <V>
+ */
 public class RAS<S, K, V> {
 
 	/**
@@ -80,7 +78,7 @@ public class RAS<S, K, V> {
 	/**
 	 * Function to Handle Reading Menu Items From ConfigFile and Sending Them
 	 * Through the Dictionary Function to Put Into Their Respective Trees
-	 * 
+	 *
 	 * @param menuType
 	 * @param nextMenu
 	 * @param menu
@@ -106,7 +104,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Sets the Number of Tables Used in the Restaurant
-	 * 
+	 *
 	 * @param tableCount
 	 * @throws IOException
 	 */
@@ -123,7 +121,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Returns the Appetizers BSTDictionary
-	 * 
+	 *
 	 * @return
 	 */
 	public BSTDictionary<K, V> getAppetizersMenu() {
@@ -132,7 +130,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Returns the Desserts BSTDictionary
-	 * 
+	 *
 	 * @return
 	 */
 	public BSTDictionary<K, V> getDessertsMenu() {
@@ -141,7 +139,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Returns the Drinks BSTDictionary
-	 * 
+	 *
 	 * @return
 	 */
 	public BSTDictionary<K, V> getDrinksMenu() {
@@ -150,7 +148,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Returns the Entree BSTDictionary
-	 * 
+	 *
 	 * @return
 	 */
 	public BSTDictionary<K, V> getEntreeMenu() {
@@ -159,7 +157,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Returns the Sides BSTDictionary
-	 * 
+	 *
 	 * @return
 	 */
 	public BSTDictionary<K, V> getSidesMenu() {
@@ -168,7 +166,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Get the Number of Tables in Current Restaurant System
-	 * 
+	 *
 	 * @return
 	 */
 	public int getTableCount() {
@@ -177,7 +175,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Iterator to Add Items to GUI Menu
-	 * 
+	 *
 	 * @param menu
 	 * @return
 	 */
@@ -187,7 +185,7 @@ public class RAS<S, K, V> {
 
 	/**
 	 * Adds the Menu Item and Price Into the Respective Dictionary
-	 * 
+	 *
 	 * @param menu
 	 * @param key   (Menu Item)
 	 * @param value (Item Price)

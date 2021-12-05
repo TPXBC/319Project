@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * 
  * Node Like Class Handling Per Table Orders
+ * @author Restaurant Automation Inc.
  * 
  */
 public class Table implements Order {
@@ -93,18 +94,58 @@ public class Table implements Order {
 		file = new File("receipts");
 		file.mkdir();
 		if (!menuItem.isEmpty()) {
-			if (tableNum > 10) {
-				String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
-				file = new File(receiptTitle);
-				out = new PrintWriter(file);
-				out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+			
+			
+			/**
+			 * Reads Operating System In Order To Correctly Establish Path
+			 * Reads If Windows
+			 */
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 				
-			} else {
-				String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
-				file = new File(receiptTitle);
-				out = new PrintWriter(file);
-				out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+				if (tableNum > 10) {
+					String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+					file = new File(receiptTitle);
+					out = new PrintWriter(file);
+					out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					
+				} else {
+					String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+					file = new File(receiptTitle);
+					out = new PrintWriter(file);
+					out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+				}
+				
+				/**
+				 * Reads Operating System In Order To Correctly Establish Path
+				 * Reads If Linux
+				 */
+			}  else if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+				
+				if (tableNum > 10) {
+					String receiptTitle = String.format("receipts/Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+					file = new File(receiptTitle);
+					out = new PrintWriter(file);
+					out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					
+				} else {
+					String receiptTitle = String.format("receipts/Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
+					file = new File(receiptTitle);
+					out = new PrintWriter(file);
+					out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+				}
+				
+				/**
+				 * Reads Operating System In Order To Correctly Establish Path
+				 * Reads If Mac and Ends the Program if Returns True
+				 */
+			}  else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+				System.out.println("We Dont Associate With Apple");
+				System.exit(0);
 			}
+
+			/**
+			 * Outputs Items Ordered
+			 */
 			for (int i = 0; i < menuItem.size(); i++) {
 				String item = menuItem.get(i);
 				double itemPrice = menuPrice.get(i);
@@ -112,6 +153,10 @@ public class Table implements Order {
 				out.println(output);
 			}
 			out.println("|--------------------------------|");
+			
+			/**
+			 * Output Tip Amount
+			 */
 			if (tipAmnt >= 1000.00 && tipAmnt < 10000.00) {
 				out.printf("|%-22s - %.2f|\n", "Tip", tipAmnt);
 			} else if (tipAmnt >= 100.00) {
@@ -123,8 +168,11 @@ public class Table implements Order {
 			} else {
 				System.out.println("Invalid Tip Amount or Tip to High");
 			}
-
 			out.println("|--------------------------------|");
+			
+			/**
+			 * Output Subtotal
+			 */
 			if (subTotal >= 100.00 && subTotal < 1000.00) {
 				out.printf("|%-22s - %.2f |\n", "Subtotal", subTotal);
 			} else if (subTotal >= 1000.00) {
@@ -191,6 +239,19 @@ public class Table implements Order {
 	 */
 	public void increaseOrderCounter() {
 		orderCounter++;
+	}
+
+	/**
+	 * Updates Subtotal Upon Cash Payment
+	 * **Used For Handling Partial Cash / Scan Payments***
+	 * @param newSubtotal
+	 */
+	public void updateSubtotal(Double newSubtotal) {
+		this.subTotal = newSubtotal;
+	}
+	
+	public ArrayList<String> getOrder() {
+		return menuItem;
 	}
 
 }

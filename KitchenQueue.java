@@ -3,20 +3,26 @@ package data;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Queue Class For Kitchen Display
+ * @author Restaurant Automation Inc
+ *
+ */
 public class KitchenQueue {
 
 	private class orderQueue {
 		int tableNum;
-		ArrayList<String> order;
-		
-		public orderQueue() {
-			order = new ArrayList<String>();
-		}
+		ArrayList<String> order = new ArrayList<String>();
 		
 		public int setTableNum(int tableNum) {
 			this.tableNum = tableNum;
 			return tableNum;
 		}
+		
+		public int getTableNum() {
+			return tableNum;
+		}
+		
 	}
 	
 	orderQueue[] orders;
@@ -48,7 +54,11 @@ public class KitchenQueue {
 			orders[getTableIndex(tableNum)] = orderNode;
 			
 		} else {
+			
 			orderNode = orders[queueIndex];
+			orderNode = new orderQueue();
+			
+			orderNode.setTableNum(tableNum);
 			
 			for (Iterator<String> iterator = menuItems.iterator(); iterator.hasNext();) {
 				orderNode.order.add(iterator.next());
@@ -96,17 +106,68 @@ public class KitchenQueue {
 	}
 	
 	public void completeOrder() {
-		if (isEmpty()) {
+		if (!isEmpty()) {
 			orderNode = orders[queueHead];
 			orders[queueHead] = null;
+			if (orders[1] != null) {
+				orders[queueHead] = orders[1];
+				reorderQueue();
+			}
 		} else {
 			System.out.println("Queue Is Empty");
 		}
 
 	}
 	
+	public int getTableNum() {
+		if (isEmpty()) {
+			throw new NullPointerException();
+		}
+		orderNode = orders[queueHead];
+		return (orderNode.getTableNum() + 1);
+	}
+	
 	public boolean isEmpty() {
 		return orders.length == 0;
 	}
+	
+	public ArrayList<String> getOrders(int index) {
+		if (orders[index].order.isEmpty()) {
+			return null;
+		}
+		return orders[index].order;
+	}
+	
+	public void placeOrderInFront(int index) {
+		if (index == 0) {
+			return;
+		}
+		
+		if (orders[queueHead] == null) {
+			orderQueue noder = orders[index];
+			orders[queueHead] = noder;
+		} else {
+			orderNode = orders[queueHead];
+			orderQueue noder = orders[index];
+			
+			orders[queueHead] = noder;
+			orders[index] = orderNode;
+		}
+		
+	}
+	
+	private void reorderQueue() {
+		for (int i = 2; i < orders.length; i++) {
+			for (int k = i+=1; k < orders.length; k++) {
+				if (orders[k] == null) {
+					continue;
+				} else {
+					orders[i] = orders[k];
+					break;
+				}
+			}
+		}
+	}
+	
 	
 }

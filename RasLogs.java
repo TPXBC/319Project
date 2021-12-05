@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  * Class Used By RAS System to Record Order Statistics
- * @author Etter
+ * @author Restaurant Automation Inc.
  *
  * @param <K>
  * @param <V>
@@ -54,14 +54,38 @@ public class RasLogs<K, V> {
 		file = new File("statistics");
 		file.mkdir();
 		
-		statsFile = new File("statistics\\StatsFile.txt");
+		/**
+		 * Reads Operating System In Order To Correctly Establish Path
+		 */
+		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			System.out.println("Windows OS Detected");
+			statsFile= new File("statistics\\StatsFile.txt");
+			pricesFile = new File("statistics\\PricesFile.txt");
+			yesterdayStatsFile = new File("statistics\\YesterdayStatsFile.txt");
+		}  else if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+			System.out.println("Linux OS Detected");
+			statsFile= new File("statistics/StatsFile.txt");
+			pricesFile = new File("statistics/PricesFile.txt");
+			yesterdayStatsFile = new File("statistics/YesterdayStatsFile.txt");
+		}  else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+			System.out.println("We Dont Associate With Apple");
+			System.exit(0);
+		}
+		
+		/**
+		 * Checks Whether statsFile Already Exists 
+		 * If Not - Creates New File In Path
+		 */
 		if (statsFile.createNewFile()) {
 			System.out.println("Stats File Created In " + statsFile.getAbsolutePath());
 		} else {
 			System.out.println("Stats File Already Exists In " + statsFile.getAbsolutePath() + ", Loading File Info");
 
+			/**
+			 * To Prevent Null Pointer Exception If File Is Blank
+			 */
 			if (statsFile.length() == 0) {
-				System.out.println(statsFile.getAbsolutePath() + " Exists But Is Blank");
+				System.out.println(statsFile.getAbsolutePath() + " Exists But Is Blank"); 
 				return;
 			}
 			
@@ -71,12 +95,18 @@ public class RasLogs<K, V> {
 			loadFileItemCountStats(yearlyItemCount, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		pricesFile = new File("statistics\\PricesFile.txt");
+		/**
+		 * Checks Whether pricesFile Already Exists 
+		 * If Not - Creates New File In Path
+		 */
 		if (pricesFile.createNewFile()) {
 			System.out.println("Prices File Created In " + pricesFile.getAbsolutePath());
 		} else {
 			System.out.println("Stats File Already Exists In " + pricesFile.getAbsolutePath() + ", Loading File Info");
 
+			/**
+			 * To Prevent Null Pointer Exception If File Is Blank
+			 */
 			if (pricesFile.length() == 0) {
 				System.out.println(pricesFile.getAbsolutePath() + " Exists But Is Blank");
 				return;
@@ -88,7 +118,10 @@ public class RasLogs<K, V> {
 			loadFilePricingStats(yearlyOrder, itemCounters[3], itemCounters[4], daysofYear);
 		}
 
-		yesterdayStatsFile = new File("statistics\\YesterdayStatsFile.txt");
+		/**
+		 * Checks Whether yesterdayStatsFile Already Exists 
+		 * If Not - Creates New File In Path
+		 */
 		if (yesterdayStatsFile.createNewFile()) {
 			System.out.println("Yesterday's Stats File Created In " + yesterdayStatsFile.getAbsolutePath());
 		} else {
@@ -163,6 +196,10 @@ public class RasLogs<K, V> {
 
 		if (start.equals(itemCounters[1])) {
 
+			/**
+			 * Checks If Day Number In File Is Past Time Frame
+			 * Does Not Intake Information If At Time Limit or Past
+			 */
 			if ((Integer.parseInt(day[1]) >= 7)) {
 				System.out.println("Method Stopped");
 				return;
@@ -172,6 +209,10 @@ public class RasLogs<K, V> {
 
 		} else if (start.equals(itemCounters[2])) {
 
+			/**
+			 * Checks If Day Number In File Is Past Time Frame
+			 * Does Not Intake Information If At Time Limit or Past
+			 */
 			if ((Integer.parseInt(day[1]) >= 30)) {
 				return;
 			} else {
@@ -180,6 +221,10 @@ public class RasLogs<K, V> {
 
 		} else if (start.equals(itemCounters[3])) {
 
+			/**
+			 * Checks If Day Number In File Is Past Time Frame
+			 * Does Not Intake Information If At Time Limit or Past
+			 */
 			if ((Integer.parseInt(day[1]) >= 365)) {
 				return;
 			} else {
@@ -267,6 +312,7 @@ public class RasLogs<K, V> {
 				daysofWeek = 0;
 				return;
 			}
+			
 			if (daysofWeek != Integer.parseInt(day[1])) {
 				System.out.printf("Day: Variable - %d : Array - %d", daysofWeek, Integer.parseInt(day[1]));
 				System.out.println("Error: Days Between Files Do Not Match");
@@ -279,6 +325,7 @@ public class RasLogs<K, V> {
 				daysofMonth = 0;
 				return;
 			}
+			
 			if (daysofMonth != Integer.parseInt(day[1])) {
 				System.out.printf("Month: Variable - %d : Array - %d", daysofMonth, Integer.parseInt(day[1]));
 				System.out.println("Error: Days Between Files Do Not Match");
@@ -583,9 +630,11 @@ public class RasLogs<K, V> {
 
 	}
 
-
-	
-	public void outputPricing() throws FileNotFoundException {
+	/**
+	 * Method To Begin Outputing Price Statistics
+	 * @throws FileNotFoundException
+	 */
+	private void outputPricing() throws FileNotFoundException {
 		out = new PrintWriter(pricesFile);
 
 		if (dailyOrder.isEmpty()) {
