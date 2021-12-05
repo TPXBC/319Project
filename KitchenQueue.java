@@ -46,6 +46,7 @@ public class KitchenQueue {
 	public void addOrderToQueue(ArrayList<String> menuItems, int tableNum) {
 		if (TableIsInQueue(tableNum)) {
 			orderNode = orders[getTableIndex(tableNum)];
+			orderNode.order.clear();
 			
 			for (Iterator<String> iterator = menuItems.iterator(); iterator.hasNext();) {
 				orderNode.order.add(iterator.next());
@@ -55,21 +56,20 @@ public class KitchenQueue {
 			
 		} else {
 			
-			orderNode = orders[queueIndex];
-			orderNode = new orderQueue();
-			
-			orderNode.setTableNum(tableNum);
-			
-			for (Iterator<String> iterator = menuItems.iterator(); iterator.hasNext();) {
-				orderNode.order.add(iterator.next());
+				orderNode = new orderQueue();
+				
+				orderNode.setTableNum(tableNum);
+				
+				for (Iterator<String> iterator = menuItems.iterator(); iterator.hasNext();) {
+					orderNode.order.add(iterator.next());
+				}
+				
+				orders[queueIndex] = orderNode;
+				
+				queueIndex++;
 			}
 			
-			orders[queueIndex] = orderNode;
-			
-			queueIndex++;
-			
 		}
-	}
 	
 	private boolean TableIsInQueue(int tableNum) {
 		for (int i = 0; i < orders.length; i++) {
@@ -109,10 +109,18 @@ public class KitchenQueue {
 		if (!isEmpty()) {
 			orderNode = orders[queueHead];
 			orders[queueHead] = null;
-			if (orders[1] != null) {
-				orders[queueHead] = orders[1];
-				reorderQueue();
+			
+			for (int i = 0; i < orders.length - 1; i++) {
+				orders[i] = orders[i+1];
 			}
+			
+			if (queueIndex == 0) {
+				return;
+			} else {
+				--queueIndex;
+			}
+			
+			
 		} else {
 			System.out.println("Queue Is Empty");
 		}
@@ -128,15 +136,20 @@ public class KitchenQueue {
 	}
 	
 	public boolean isEmpty() {
-		return orders.length == 0;
+		return queueIndex == 0;
 	}
 	
-	public ArrayList<String> getOrders(int index) {
+	public ArrayList<String> getOrderMenu(int index) {
 		if (orders[index].order.isEmpty()) {
 			return null;
 		}
 		return orders[index].order;
 	}
+	
+	public orderQueue getOrderAtIndex(int index) {
+		return orders[index];
+	}
+	
 	
 	public void placeOrderInFront(int index) {
 		if (index == 0) {
@@ -144,30 +157,21 @@ public class KitchenQueue {
 		}
 		
 		if (orders[queueHead] == null) {
+			
 			orderQueue noder = orders[index];
 			orders[queueHead] = noder;
+			orders[index] = null;
+			
 		} else {
+			
 			orderNode = orders[queueHead];
 			orderQueue noder = orders[index];
 			
 			orders[queueHead] = noder;
 			orders[index] = orderNode;
+			
 		}
 		
 	}
-	
-	private void reorderQueue() {
-		for (int i = 2; i < orders.length; i++) {
-			for (int k = i+=1; k < orders.length; k++) {
-				if (orders[k] == null) {
-					continue;
-				} else {
-					orders[i] = orders[k];
-					break;
-				}
-			}
-		}
-	}
-	
 	
 }

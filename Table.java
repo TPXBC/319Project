@@ -12,6 +12,8 @@ import java.util.ArrayList;
  * 
  */
 public class Table implements Order {
+	
+	private ArrayList<String> drinkItems;
 	private ArrayList<String> menuItem;
 	private ArrayList<Double> menuPrice;
 
@@ -56,7 +58,6 @@ public class Table implements Order {
 	 * Add Item to Order
 	 */
 	public String addItem(BSTDictionary menu, String Item) {
-		// TODO Auto-generated method stub
 		Double itemPrice = Double.parseDouble((String) menu.get(Item));
 		this.menuItem.add(Item);
 		this.menuPrice.add(itemPrice);

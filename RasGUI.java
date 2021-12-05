@@ -465,8 +465,21 @@ public class RasGUI<S, K, V> {
 					kitchenDisplay.add(BorderLayout.WEST, orderPanels);
 					kitchenDisplay.add(BorderLayout.SOUTH, kitchenPanel);
 					kitchenDisplay.setVisible(true);
+				} else {
+					openKitchenDisplay();
 				}
 				
+			}
+			
+			private void openKitchenDisplay() {
+				kitchenDisplay.setTitle("Kitchen Display");
+				kitchenDisplay.setSize(450, 600);
+				kitchenPanel.setLayout(new GridLayout(1, 1, 5, 5));
+				orderPanels.setLayout(new GridLayout(6, 1, 5, 5));
+				kitchenDisplay.add(BorderLayout.CENTER, displayPanel);
+				kitchenDisplay.add(BorderLayout.WEST, orderPanels);
+				kitchenDisplay.add(BorderLayout.SOUTH, kitchenPanel);
+				kitchenDisplay.setVisible(true);
 			}
 			
 			private void completeOrder() {
@@ -477,9 +490,21 @@ public class RasGUI<S, K, V> {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
+					
+						if (order.orderQueue.isEmpty()) {
+							return;
+						}
+						
 						order.setTableOrderReady(order.orderQueue.getTableNum()	);
+						
 						order.orderQueue.completeOrder();
-						displayOrder(0);
+						
+						if (order.orderQueue.getOrderAtIndex(0) == null) {
+							orderDisplay.setText("No Orders To Display Yet");
+						} else {
+							displayOrder(0);
+						}
+
 						
 						
 					}
@@ -489,17 +514,17 @@ public class RasGUI<S, K, V> {
 			
 			private void displayOrder(int queueIndex) {
 				orderDisplay.setText(" ");
+				
 				if (queueIndex > 5 || queueIndex < 0 ) {
 					System.out.println("Error In Indexing");
 				} else {
 					
-					if (order.orderQueue.getOrders(queueIndex).isEmpty()) {
+					if (order.orderQueue.getOrderMenu(queueIndex).isEmpty()) {
 						orderDisplay.setText("No Orders To Display");
 						return;
 					} else {
-
 						
-						ArrayList<String> displayOrder = order.orderQueue.getOrders(queueIndex);
+						ArrayList<String> displayOrder = order.orderQueue.getOrderMenu(queueIndex);
 						order.orderQueue.placeOrderInFront(queueIndex);
 						
 						for (Iterator<String> iterator = displayOrder.iterator(); iterator.hasNext();) {
@@ -531,7 +556,7 @@ public class RasGUI<S, K, V> {
 			
 			private void displayTextArea() {
 				orderDisplay = new JTextArea();
-				orderDisplay.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+				orderDisplay.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
 				displayPanel.add(orderDisplay);
 			}
 			
