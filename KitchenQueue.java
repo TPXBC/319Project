@@ -3,11 +3,6 @@ package data;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Queue Class For Kitchen Display
- * @author Restaurant Automation Inc
- *
- */
 public class KitchenQueue {
 
 	private class orderQueue {

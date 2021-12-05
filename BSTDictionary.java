@@ -1,16 +1,11 @@
-
+/**
+ * BSTDictionary
+ */
 package data;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * BSTDictionary Class For Storage
- * @author Restaurant Automation Inc
- *
- * @param <K>
- * @param <V>
- */
 public class BSTDictionary<K, V> {
 	private BSTDictionary<K, V> left;
 	private BSTDictionary<K, V> right;

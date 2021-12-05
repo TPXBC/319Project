@@ -8,26 +8,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
+import data.BSTDictionary;
+import data.RasLogs;
 import data.Table;
 import ras.RAS;
 
-/**
- * Main GUI Class for the Restaurant Automation System
- * @author Restaurant Automation Inc.
- *
- * @param <S>
- * @param <K>
- * @param <V>
- */
 public class RasGUI<S, K, V> {
 
 	RAS ras;
@@ -66,7 +59,7 @@ public class RasGUI<S, K, V> {
 
 	/**
 	 * Constructor Creating Buttons for the Positions
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -86,7 +79,7 @@ public class RasGUI<S, K, V> {
 
 		mainWindow.button = new Button[mainWindow.ras.getTableCount()];
 
-		mainWindow.RASframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		mainWindow.RASframe.setDefaultCloseOperation(mainWindow.RASframe.DO_NOTHING_ON_CLOSE);
 		mainWindow.RASframe.setSize(400, 550);
 		mainWindow.RASpanel.setLayout(new GridLayout(3, 0, 5, 5));
 		mainWindow.RASpanel.setBounds(100, 100, 100, 100);
@@ -94,23 +87,23 @@ public class RasGUI<S, K, V> {
 		mainWindow.addKitchenButton();
 		mainWindow.addManagerButton();
 		mainWindow.RASframe.add(BorderLayout.CENTER, mainWindow.RASpanel);
-
+		
 		mainWindow.RASframe.setVisible(true);
-
+		
 		mainWindow.RASframe.addWindowListener(new WindowAdapter() {
-			@Override
 			public void windowClosing(WindowEvent e) {
 				try {
 					mainWindow.order.rasStats.outputStatisticsAtEndOfDay();
 				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				mainWindow.RASframe.dispose();
 				System.exit(0);
-
+				
 			}
 		});
-
+		
 
 	}
 
@@ -119,20 +112,19 @@ public class RasGUI<S, K, V> {
 	 */
 	/**
 	 * Adds Table Button Table Button Leads to Host and Server Option
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void addTableButton() throws Exception {
-		order = new OrderGUI(ras.getTableCount(), ras, button);
+		order = new OrderGUI(ras.getTableCount(), ras);
 		tableButton = new JButton("Tables");
-
+		
 		RASpanel.add(tableButton);
 		tableButton.addActionListener(new ActionListener() {
 
 			/**
 			 * ActionListener to Open TableWindow on ButtonClick
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				showTables();
 			}
@@ -146,18 +138,19 @@ public class RasGUI<S, K, V> {
 	public void showTables() {
 		if (tableClicks == 0) {
 			tableClicks++;
-			tablesFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			tablesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
 			tablesPanel.setLayout(new GridLayout(10, 3, 5, 5));
-
+			
 			addTables();
-
+			
 			tablesFrame.add(BorderLayout.CENTER, tablesPanel);
 			tablesFrame.setVisible(true);
-
+			
 		} else {
-
-			tablesFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			
+			tablesFrame = new JFrame("Tables Window");
+			tablesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
 			tablesPanel.setLayout(new GridLayout(10, 3, 5, 5));
 			tablesFrame.add(BorderLayout.CENTER, tablesPanel);
@@ -175,11 +168,11 @@ public class RasGUI<S, K, V> {
 			int k = i + 1;
 			button[i] = new Button("Table: " + k);
 
-			order.setTableUnassigned(i+1);
+			button[i].setBackground(Color.red);
 
 			tablesPanel.add(button[i]);
 
-			button[i].addActionListener(new ActionListener() {
+			button[i].addActionListener((ActionListener) new ActionListener() {
 
 				/**
 				 * Opens Up Table Window for the Selected Table Host Option - The Window Will
@@ -187,7 +180,6 @@ public class RasGUI<S, K, V> {
 				 * Server Option - The Window Will Allow a Server to Add Orders, Process
 				 * Payment, and Print Receipt
 				 */
-				@Override
 				public void actionPerformed(ActionEvent e) {
 
 					tableNum = k;
@@ -195,7 +187,7 @@ public class RasGUI<S, K, V> {
 					if (tBTNClicks == 0) {
 						tBTNClicks += 1;
 						singleTableFrame.setTitle("Table: " + (tableNum));
-						singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+						singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 						singleTableFrame.setSize(400, 550);
 						singleTablePanel.setLayout(new GridLayout(2, 0, 5, 5));
 						addGreeterButton();
@@ -216,7 +208,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void greeterWaitFrameSetup() {
 		singleTableFrame.setTitle("Table: " + (tableNum));
-		singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		singleTableFrame.setSize(400, 550);
 		singleTablePanel.setLayout(new GridLayout(2, 0, 5, 5));
 		singleTableFrame.setContentPane(singleTablePanel);
@@ -240,10 +232,55 @@ public class RasGUI<S, K, V> {
 	private void manageFrameSetup() {
 		manageFrame.setTitle("Management Window");
 		manageFrame.setSize(400, 550);
-		manageFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 		manageFrame.setContentPane(managePanel);
 		manageFrame.setVisible(true);
+	}
+
+	/**
+	 * Sets Table to Unassigned Color Coding
+	 * 
+	 * @param tableNum
+	 */
+	public void setTableUnassigned(int tableNum) {
+		this.button[tableNum - 1].setBackground(Color.red);
+	}
+
+	/**
+	 * Sets Table to Assigned Color Coding
+	 * 
+	 * @param tableNum
+	 */
+	public void setTableAssigned(int tableNum) {
+		this.button[tableNum - 1].setBackground(Color.blue);
+	}
+
+	/**
+	 * Sets Table to Ordered Color Coding
+	 * 
+	 * @param tableNum
+	 */
+	public void setTableOrdered(int tableNum) {
+		this.button[tableNum - 1].setBackground(Color.yellow);
+	}
+
+	/**
+	 * Sets Table to Order-Ready Color Coding
+	 * 
+	 * @param tableNum
+	 */
+	public void setTableOrderReady(int tableNum) {
+		this.button[tableNum - 1].setBackground(Color.cyan);
+	}
+
+	/**
+	 * Sets Table to Order Completed Color Coding
+	 * 
+	 * @param tableNum
+	 */
+	public void setTableOrderCompleted(int tableNum) {
+		this.button[tableNum - 1].setBackground(Color.green);
 	}
 
 	/*
@@ -255,7 +292,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addWaitstaffButton() {
 		JButton waitstaffButton = new JButton("Waitstaff");
-
+		
 		singleTablePanel.add(waitstaffButton);
 		waitstaffButton.addActionListener(new ActionListener() {
 
@@ -263,12 +300,11 @@ public class RasGUI<S, K, V> {
 			 * Handles New Frame On Click If Frame Has Already Been Opened. Separate Method
 			 * Handling Frame Opening Will Be Called
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (sBTNClicks == 0) {
 					sBTNClicks += 1;
 					singleTableFrame.setTitle("Table: " + (tableNum));
-					singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+					singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					singleTableFrame.setSize(400, 550);
 					serverPanel.setLayout(new GridLayout(5, 0, 5, 5));
 					try {
@@ -290,7 +326,7 @@ public class RasGUI<S, K, V> {
 			 */
 			private void serverFrameSetup() {
 				singleTableFrame.setTitle("Table: " + (tableNum));
-				singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				singleTableFrame.setSize(400, 550);
 				serverPanel.setLayout(new GridLayout(5, 0, 5, 5));
 				singleTableFrame.setContentPane(serverPanel);
@@ -304,7 +340,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addGreeterButton() {
 		JButton greeter = new JButton("Greeter");
-
+		
 		singleTablePanel.add(greeter);
 		greeter.addActionListener(new ActionListener() {
 
@@ -312,12 +348,11 @@ public class RasGUI<S, K, V> {
 			 * Handles New Frame On Click If Frame Has Already Been Opened. Separate Method
 			 * Handling Frame Opening Will Be Called
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (hBTNClicks == 0) {
 					hBTNClicks += 1;
 					singleTableFrame.setTitle("Table: " + (tableNum));
-					singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+					singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					singleTableFrame.setSize(400, 550);
 					hostPanel.setLayout(new GridLayout(5, 0, 5, 5));
 					assignTable();
@@ -341,7 +376,7 @@ public class RasGUI<S, K, V> {
 			 */
 			private void hostFrameSetup() {
 				singleTableFrame.setTitle("Table: " + (tableNum));
-				singleTableFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				singleTableFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				singleTableFrame.setSize(400, 550);
 				hostPanel.setLayout(new GridLayout(5, 0, 5, 5));
 				singleTableFrame.setContentPane(hostPanel);
@@ -356,13 +391,12 @@ public class RasGUI<S, K, V> {
 	 */
 	private void assignTable() {
 		JButton assignTableButton = new JButton("Assign Table");
-
+		
 		hostPanel.add(assignTableButton);
 		assignTableButton.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				order.setTableAssigned(tableNum);
+				setTableAssigned(tableNum);
 			}
 
 		});
@@ -370,16 +404,15 @@ public class RasGUI<S, K, V> {
 
 	/**
 	 * HOST AND SERVER BUTTON Button to Take Orders of That Table
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	private void openOrder(JPanel panel) throws Exception {
 		JButton orderButton = new JButton("Order");
-
+		
 		panel.add(orderButton);
 		orderButton.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				order.showOrderWindow(tableNum);
 			}
@@ -392,13 +425,12 @@ public class RasGUI<S, K, V> {
 	 */
 	private void clearTable(JPanel panel) {
 		JButton clearTableButton = new JButton("Clear Table");
-
+		
 		panel.add(clearTableButton);
 		clearTableButton.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				order.setTableUnassigned(tableNum);
+				setTableUnassigned(tableNum);
 
 			}
 		});
@@ -409,14 +441,13 @@ public class RasGUI<S, K, V> {
 	 */
 	public void backButton(JPanel panel, int num) {
 		JButton backButton = new JButton("Back");
-
+		
 		panel.add(backButton);
 		backButton.addActionListener(new ActionListener() {
 
 			/**
 			 * Handles Changing of the Frame on Click Sends User Back to Main Frame
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (num == 0) {
 					mainFrameSetup();
@@ -435,7 +466,7 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addKitchenButton() {
 		kitchen = new JButton("Kitchen");
-
+		
 		RASpanel.add(kitchen);
 	}
 
@@ -447,19 +478,19 @@ public class RasGUI<S, K, V> {
 	 */
 	private void addManagerButton() {
 		manager = new JButton("Manager");
-
+		
 		RASpanel.add(manager);
 
 		manager.addActionListener(new ActionListener() {
 
 			int i = 0;
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (i == 0) {
 					i++;
 					manageFrame.setTitle("Management Window");
 					manageFrame.setSize(400, 550);
+					manageFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 					managePanel.setLayout(new GridLayout(4, 1, 5, 5));
 					statsButton();
 					endOfDayStatsButton();
@@ -481,7 +512,6 @@ public class RasGUI<S, K, V> {
 
 				statsButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						try {
 							order.rasStats.outputStatistics();
@@ -491,7 +521,7 @@ public class RasGUI<S, K, V> {
 					}
 				});
 			}
-
+			
 			/**
 			 * Prints the Statistics of the Restaurant
 			 */
@@ -501,7 +531,6 @@ public class RasGUI<S, K, V> {
 
 				statsButton.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						try {
 							order.rasStats.outputStatisticsAtEndOfDay();
@@ -521,7 +550,6 @@ public class RasGUI<S, K, V> {
 
 				dayBeforeStats.addActionListener(new ActionListener() {
 
-					@Override
 					public void actionPerformed(ActionEvent e) {
 						try {
 							order.rasStats.outputYesterdayStatistics();
