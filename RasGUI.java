@@ -155,7 +155,7 @@ public class RasGUI<S, K, V> {
 			tableClicks++;
 			tablesFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			tablesFrame.setSize(400, 550);
-			tablesPanel.setLayout(new GridLayout(10, 3, 5, 5));
+			tablesPanel.setLayout(new GridLayout(10, 6, 5, 5));
 
 			addTables();
 
