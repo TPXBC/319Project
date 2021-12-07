@@ -18,29 +18,29 @@ import java.util.Iterator;
  */
 public class RasLogs<K, V> {
 
-	ArrayList<Double> yesterdaysOrders = new ArrayList<Double>();
-	ArrayList<Double> dailyOrder = new ArrayList<Double>();
-	ArrayList<Double> weeklyOrder = new ArrayList<Double>();
-	ArrayList<Double> monthlyOrder = new ArrayList<Double>();
-	ArrayList<Double> yearlyOrder = new ArrayList<Double>();
+	private ArrayList<Double> yesterdaysOrders = new ArrayList<Double>();
+	private ArrayList<Double> dailyOrder = new ArrayList<Double>();
+	private ArrayList<Double> weeklyOrder = new ArrayList<Double>();
+	private ArrayList<Double> monthlyOrder = new ArrayList<Double>();
+	private ArrayList<Double> yearlyOrder = new ArrayList<Double>();
 
-	BSTDictionary<K, V> dayBeforeItemCount = new BSTDictionary<>();
-	BSTDictionary<K, V> dailyItemCount = new BSTDictionary<>();
-	BSTDictionary<K, V> weeklyItemCount = new BSTDictionary<>();
-	BSTDictionary<K, V> monthlyItemCount = new BSTDictionary<>();
-	BSTDictionary<K, V> yearlyItemCount = new BSTDictionary<>();
+	private BSTDictionary<K, V> dayBeforeItemCount = new BSTDictionary<>();
+	private BSTDictionary<K, V> dailyItemCount = new BSTDictionary<>();
+	private BSTDictionary<K, V> weeklyItemCount = new BSTDictionary<>();
+	private BSTDictionary<K, V> monthlyItemCount = new BSTDictionary<>();
+	private BSTDictionary<K, V> yearlyItemCount = new BSTDictionary<>();
 
-	int daysofWeek = 0;
-	int daysofMonth = 0;
-	int daysofYear = 0;
+	private int daysofWeek = 0;
+	private int daysofMonth = 0;
+	private int daysofYear = 0;
 
-	BufferedReader in;
-	PrintWriter out;
+	private BufferedReader in;
+	private PrintWriter out;
 
-	File file;
-	File statsFile;
-	File pricesFile;
-	File yesterdayStatsFile;
+	private File file;
+	private File statsFile;
+	private File pricesFile;
+	private File yesterdayStatsFile;
 
 	private String itemCounters[] = new String[] { "--Daily--", "--Weekly--", "--Monthly--", "--Yearly--", "--End--" };
 

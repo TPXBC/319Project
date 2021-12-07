@@ -16,8 +16,8 @@ public class KitchenQueue {
 	 *
 	 */
 	private class orderQueue {
-		int tableNum;
-		ArrayList<String> order = new ArrayList<String>();
+		private int tableNum;
+		private ArrayList<String> order = new ArrayList<String>();
 		
 		public int setTableNum(int tableNum) {
 			this.tableNum = tableNum;
@@ -182,8 +182,13 @@ public class KitchenQueue {
 	public ArrayList<String> getOrderMenu(int index) {
 		if (orders[index].order.isEmpty()) {
 			return null;
+		} else if (orders[index].order == null) {
+			return null;
+		} else if (orders[index] == null) {
+			return null;
+		} else {
+			return orders[index].order;
 		}
-		return orders[index].order;
 	}
 	
 	/**

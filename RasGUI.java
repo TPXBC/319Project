@@ -18,11 +18,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 
-import data.Table;
 import RAS.RAS;
+import data.Table;
 
 /**
  * Main GUI Class for the Restaurant Automation System
@@ -34,42 +33,42 @@ import RAS.RAS;
  */
 public class RasGUI<S, K, V> {
 
-	RAS ras;
-	OrderGUI order;
+	private RAS ras;
+	private OrderGUI order;
 
-	int hBTNClicks = 0;
-	int sBTNClicks = 0;
-	int tBTNClicks = 0;
-	int tableClicks = 0;
-	int tableNum;
-	int indexer;
+	private int hBTNClicks = 0;
+	private int sBTNClicks = 0;
+	private int tBTNClicks = 0;
+	private int tableClicks = 0;
+	private int tableNum;
+	private int indexer;
 
-	JFrame tablesFrame = new JFrame("Table Window");
-	JFrame singleTableFrame = new JFrame();
-	JFrame RASframe = new JFrame("Restaurant Automation System");
-	JFrame kitchenDisplay = new JFrame("Kitchen Menu");
+	private JFrame tablesFrame = new JFrame("Table Window");
+	private JFrame singleTableFrame = new JFrame();
+	private JFrame RASframe = new JFrame("Restaurant Automation System");
+	private  JFrame kitchenDisplay = new JFrame("Kitchen Menu");
 
 
-	JFileChooser fileChooser = new JFileChooser();
-	File file;
+	private JFileChooser fileChooser = new JFileChooser();
+	private File file;
 
-	Table noder = null;
+	private Table noder = null;
 
-	JPanel RASpanel = new JPanel();
-	JPanel tablesPanel = new JPanel();
-	JPanel singleTablePanel = new JPanel();
-	JPanel serverPanel = new JPanel();
-	JPanel hostPanel = new JPanel();
-	
-	JPanel kitchenPanel = new JPanel();
-	JPanel orderPanels = new JPanel();
-	JPanel displayPanel = new JPanel();
-	JTextArea orderDisplay;
+	private JPanel RASpanel = new JPanel();
+	private JPanel tablesPanel = new JPanel();
+	private JPanel singleTablePanel = new JPanel();
+	private JPanel serverPanel = new JPanel();
+	private JPanel hostPanel = new JPanel();
 
-	JFrame manageFrame = new JFrame();
-	JPanel managePanel = new JPanel();
+	private JPanel kitchenPanel = new JPanel();
+	private JPanel orderPanels = new JPanel();
+	private JPanel displayPanel = new JPanel();
+	private JTextArea orderDisplay;
 
-	Button[] button;
+	private JFrame manageFrame = new JFrame();
+	private JPanel managePanel = new JPanel();
+
+	private Button[] button;
 
 	/**
 	 * Constructor Creating Buttons for the Positions
@@ -443,24 +442,24 @@ public class RasGUI<S, K, V> {
 	private void addKitchenButton() {
 		JButton kitchenButton = new JButton("Kitchen");
 		RASpanel.add(kitchenButton);
-		
+
 		kitchenButton.addActionListener(new ActionListener() {
 
 			int i = 0;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (i == 0) {
-					
+
 					i++;
 					kitchenDisplay.setTitle("Kitchen Display");
 					kitchenDisplay.setSize(450, 600);
 					kitchenPanel.setLayout(new GridLayout(1, 1, 5, 5));
 					orderPanels.setLayout(new GridLayout(6, 1, 5, 5));
-					
+
 					displayTextArea();
 					viewButtons();
 					completeOrder();
-					
+
 					kitchenDisplay.add(BorderLayout.CENTER, displayPanel);
 					kitchenDisplay.add(BorderLayout.WEST, orderPanels);
 					kitchenDisplay.add(BorderLayout.SOUTH, kitchenPanel);
@@ -468,9 +467,9 @@ public class RasGUI<S, K, V> {
 				} else {
 					openKitchenDisplay();
 				}
-				
+
 			}
-			
+
 			private void openKitchenDisplay() {
 				kitchenDisplay.setTitle("Kitchen Display");
 				kitchenDisplay.setSize(450, 600);
@@ -481,69 +480,70 @@ public class RasGUI<S, K, V> {
 				kitchenDisplay.add(BorderLayout.SOUTH, kitchenPanel);
 				kitchenDisplay.setVisible(true);
 			}
-			
+
 			private void completeOrder() {
 				JButton completeOrderButton = new JButton("Complete Order");
 				kitchenPanel.add(completeOrderButton);
-				
+
 				completeOrderButton.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-					
+
 						if (order.orderQueue.isEmpty()) {
 							return;
 						}
-						
+
 						order.setTableOrderReady(order.orderQueue.getTableNum()	);
-						
+
 						order.orderQueue.completeOrder();
-						
+
 						if (order.orderQueue.getOrderAtIndex(0) == null) {
 							orderDisplay.setText("No Orders To Display Yet");
 						} else {
 							displayOrder(0);
 						}
 
-						
-						
+
+
 					}
-					
+
 				});
 			}
-			
+
 			private void displayOrder(int queueIndex) {
 				orderDisplay.setText(" ");
-				
+
 				if (queueIndex > 5 || queueIndex < 0 ) {
 					System.out.println("Error In Indexing");
 				} else {
-					
+
 					if (order.orderQueue.isEmpty()) {
 						orderDisplay.setText("No Orders To Display");
 						return;
-					} else if (order.orderQueue.getOrderMenu(queueIndex).isEmpty()) {
+					} else if (order.orderQueue.getOrderMenu(queueIndex) == null) {
 						orderDisplay.setText("No Orders To Display");
 						return;
 					} else  {
-						
+
 						ArrayList<String> displayOrder = order.orderQueue.getOrderMenu(queueIndex);
 						order.orderQueue.placeOrderInFront(queueIndex);
-						
+
 						for (Iterator<String> iterator = displayOrder.iterator(); iterator.hasNext();) {
 							orderDisplay.append(String.format("%s\n", iterator.next()));
 						}
+						
 					}
 				}
 			}
-			
+
 			private void viewButtons() {
 				Button[] orderButtons = new Button[6];
-				
+
 				for (int i = 0; i < 6; i++) {
 					orderButtons[i] = new Button(String.format("View Order #%d", i));
 					orderPanels.add(orderButtons[i]);
-					
+
 					int orderIndex = i;
 					orderButtons[i].addActionListener(new ActionListener() {
 
@@ -551,20 +551,20 @@ public class RasGUI<S, K, V> {
 						public void actionPerformed(ActionEvent e) {
 							displayOrder(orderIndex);
 						}
-						
+
 					});
 				}
-				
+
 			}
-			
+
 			private void displayTextArea() {
 				orderDisplay = new JTextArea();
 				orderDisplay.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
 				displayPanel.add(orderDisplay);
 			}
-			
+
 		});
-		
+
 	}
 
 	/*

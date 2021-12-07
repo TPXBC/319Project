@@ -460,7 +460,7 @@ public class OrderGUI<K, V> extends RasGUI {
 
 					
 					payFrame.setTitle("Payment Menu");
-					payFrame.setSize(600, 750);
+					payFrame.setSize(400, 550);
 					payFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 					/// Set Up Left Side of Frame With Cash Buttons
@@ -510,7 +510,7 @@ public class OrderGUI<K, V> extends RasGUI {
 			 */
 			private void paymentMenu() {
 				payFrame.setTitle("Payment Menu");
-				payFrame.setSize(600, 750);
+				payFrame.setSize(400, 550);
 
 				payFrame.add(BorderLayout.WEST, payPanelLeft);
 				payFrame.add(BorderLayout.CENTER, payPanelCenter);
