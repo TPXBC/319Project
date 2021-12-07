@@ -87,7 +87,7 @@ public class OrderGUI<K, V> extends RasGUI {
 		orderFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		orderFrame.setSize(400, 550);
 
-		orderPanel.setLayout(new GridLayout(8, 8, 5, 5));
+		orderPanel.setLayout(new GridLayout(9, 1, 5, 5));
 		orderFrame.add(BorderLayout.CENTER, orderPanel);
 		tableNode = new Table();
 
