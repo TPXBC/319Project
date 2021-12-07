@@ -519,10 +519,13 @@ public class RasGUI<S, K, V> {
 					System.out.println("Error In Indexing");
 				} else {
 					
-					if (order.orderQueue.getOrderMenu(queueIndex).isEmpty()) {
+					if (order.orderQueue.isEmpty()) {
 						orderDisplay.setText("No Orders To Display");
 						return;
-					} else {
+					} else if (order.orderQueue.getOrderMenu(queueIndex).isEmpty()) {
+						orderDisplay.setText("No Orders To Display");
+						return;
+					} else  {
 						
 						ArrayList<String> displayOrder = order.orderQueue.getOrderMenu(queueIndex);
 						order.orderQueue.placeOrderInFront(queueIndex);
