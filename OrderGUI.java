@@ -97,6 +97,7 @@ public class OrderGUI<K, V> extends RasGUI {
 		addDessertsButton();
 		addSidesButton();
 		sendOrder();
+		cancelOrder();
 		printReceipt();
 		processPayment();
 
@@ -363,6 +364,28 @@ public class OrderGUI<K, V> extends RasGUI {
 		});
 	}
 	
+	/**
+	 * Cancels Order - Clears TableClass
+	 * If Order Is In Queue - Removes From Queue
+	 */
+	private void cancelOrder() {
+		JButton cancelOrder = new JButton("Cancel Order");
+		orderPanel.add(cancelOrder);
+		
+		cancelOrder.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tableNode = table[number - 1];
+				tableNode.clearTable();
+				orderQueue.cancelOrder(number - 1);
+				setTableAssigned(number);
+			}
+			
+			
+		});
+	}
+	
 	
 	/**
 	 * Creates Button to Print Receipt Prints Receipt in Console and Outputs to New
@@ -503,6 +526,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				payFrame.setVisible(true);
 			}
 
+			/**
+			 * Adds $1 To The Total Paid
+			 */
 			private void oneDollarButton() {
 				JButton dollarButton = new JButton("$1.00");
 				payPanelLeft.add(dollarButton);
@@ -524,6 +550,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Adds $5 To The Total Paid
+			 */
 			private void fiveDollarButton() {
 				JButton dollarButton = new JButton("$5.00");
 				payPanelLeft.add(dollarButton);
@@ -545,6 +574,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Adds $10 To The Total Paid
+			 */
 			private void tenDollarButton() {
 				JButton dollarButton = new JButton("$10.00");
 				payPanelLeft.add(dollarButton);
@@ -566,6 +598,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Adds $20 To The Total Paid
+			 */
 			private void twentyDollarButton() {
 				JButton dollarButton = new JButton("$20.00");
 				payPanelLeft.add(dollarButton);
@@ -587,6 +622,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Adds $50 To The Total Paid
+			 */
 			private void fiftyDollarButton() {
 				JButton dollarButton = new JButton("$50.00");
 				payPanelLeft.add(dollarButton);
@@ -608,6 +646,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Adds $100 To The Total Paid
+			 */
 			private void hundredDollarButton() {
 				JButton dollarButton = new JButton("$100.00");
 				payPanelLeft.add(dollarButton);
@@ -679,6 +720,10 @@ public class OrderGUI<K, V> extends RasGUI {
 						} else if (Double.parseDouble(tipPayField.getText()) >= 0.00) {
 
 							Double tipAmount = Double.parseDouble(tipPayField.getText());
+							
+							tableNode = table[number - 1];
+							tableNode.addTip(tipAmount);
+							
 							subtotal = tipAmount + subtotal;
 
 							customPayField.setText(String.format("%.2f", tipAmount));
@@ -708,6 +753,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				payPanelCenter.add(changeDuePayField);
 			}
 
+			/**
+			 * Simulates Cash Pay Button
+			 */
 			private void cashPayButton() {
 				JButton cashButton = new JButton("Pay With Cash");
 				payPanelRight.add(cashButton);
@@ -761,6 +809,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Simulates Valid QR Scan
+			 */
 			private void validQRScan() {
 				JButton QRScan = new JButton("Valid QR Scan");
 				payPanelRight.add(QRScan);
@@ -804,6 +855,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Simulates Invalid QR Scan
+			 */
 			private void invalidQRScan() {
 				JButton QRScan = new JButton("Invalid QR Scan");
 				payPanelRight.add(QRScan);
@@ -823,6 +877,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Simulates Valid Debit Scan
+			 */
 			private void validDebitScan() {
 				JButton DebitScan = new JButton("Valid Debit Scan");
 				payPanelRight.add(DebitScan);
@@ -865,6 +922,9 @@ public class OrderGUI<K, V> extends RasGUI {
 				});
 			}
 
+			/**
+			 * Simulates Invalid Debit Card Scan
+			 */
 			private void invalidDebitScan() {
 				JButton DebitScan = new JButton("Invalid Debit Scan");
 				payPanelRight.add(DebitScan);

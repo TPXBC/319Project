@@ -107,13 +107,13 @@ public class Table implements Order {
 					String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
 					file = new File(receiptTitle);
 					out = new PrintWriter(file);
-					out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					out.printf(" ___________________Table:_%d_#:_%d_%8s___________________\n", tableNum, orderCounter, "ORDER_RECEIPT");
 					
 				} else {
 					String receiptTitle = String.format("receipts\\Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
 					file = new File(receiptTitle);
 					out = new PrintWriter(file);
-					out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					out.printf(" ___________________Table:_%d_#:_%d_%7s_________________\n", tableNum, orderCounter, "ORDER_RECEIPT");
 				}
 				
 				/**
@@ -126,13 +126,13 @@ public class Table implements Order {
 					String receiptTitle = String.format("receipts/Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
 					file = new File(receiptTitle);
 					out = new PrintWriter(file);
-					out.printf(" ___Table:_%d_#:_%d_%8s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					out.printf(" ___________________Table:_%d_#:_%d_%8s___________________\n", tableNum, orderCounter, "ORDER_RECEIPT");
 					
 				} else {
 					String receiptTitle = String.format("receipts/Table%dOrder%d%s.txt", tableNum, orderCounter, "ORDER_RECEIPT");
 					file = new File(receiptTitle);
 					out = new PrintWriter(file);
-					out.printf(" ___Table:_%d_#:_%d_%7s_\n", tableNum, orderCounter, "ORDER_RECEIPT");
+					out.printf(" ___________________Table:_%d_#:_%d_%7s_________________\n", tableNum, orderCounter, "ORDER_RECEIPT");
 				}
 				
 				/**
@@ -150,38 +150,44 @@ public class Table implements Order {
 			for (int i = 0; i < menuItem.size(); i++) {
 				String item = menuItem.get(i);
 				double itemPrice = menuPrice.get(i);
-				String output = String.format("|%-25s - %.2f|", item, itemPrice);
-				out.println(output);
+				if (itemPrice >= 10.00) {
+					String output = String.format("|%-59s - %.2f|", item, itemPrice);
+					out.println(output);
+				} else {
+					String output = String.format("|%-60s - %.2f|", item, itemPrice);
+					out.println(output);
+				}
+				
 			}
-			out.println("|--------------------------------|");
+			out.println("|-------------------------------------------------------------------|");
 			
 			/**
 			 * Output Tip Amount
 			 */
 			if (tipAmnt >= 1000.00 && tipAmnt < 10000.00) {
-				out.printf("|%-22s - %.2f|\n", "Tip", tipAmnt);
+				out.printf("|%-57s - %.2f|\n", "Tip", tipAmnt);
 			} else if (tipAmnt >= 100.00) {
-				out.printf("|%-23s - %.2f|\n", "Tip", tipAmnt);
+				out.printf("|%-58s - %.2f|\n", "Tip", tipAmnt);
 			} else if (tipAmnt >= 10.00) {
-				out.printf("|%-24s - %.2f|\n", "Tip", tipAmnt);
+				out.printf("|%-59s - %.2f|\n", "Tip", tipAmnt);
 			} else if (tipAmnt < 10.00 && tipAmnt >= 0.00) {
-				out.printf("|%-25s - %.2f|\n", "Tip", tipAmnt);
+				out.printf("|%-60s - %.2f|\n", "Tip", tipAmnt);
 			} else {
 				System.out.println("Invalid Tip Amount or Tip to High");
 			}
-			out.println("|--------------------------------|");
+			out.println("|-------------------------------------------------------------------|");
 			
 			/**
 			 * Output Subtotal
 			 */
 			if (subTotal >= 100.00 && subTotal < 1000.00) {
-				out.printf("|%-22s - %.2f |\n", "Subtotal", subTotal);
+				out.printf("|%-57s - %.2f |\n", "Subtotal", subTotal);
 			} else if (subTotal >= 1000.00) {
-				out.printf("|%-21s - %.2f |\n", "Subtotal", subTotal);
+				out.printf("|%-56s - %.2f |\n", "Subtotal", subTotal);
 			} else {
-				out.printf("|%-23s - %.2f |\n", "Subtotal", subTotal);
+				out.printf("|%-58s - %.2f |\n", "Subtotal", subTotal);
 			}
-			out.println("|________________________________|");
+			out.println("|___________________________________________________________________|");
 
 			System.out.printf("Table: %d Order #: %d Printed to Directory\n", tableNum, orderCounter);
 		} else {
@@ -251,6 +257,10 @@ public class Table implements Order {
 		this.subTotal = newSubtotal;
 	}
 	
+	/**
+	 * Returns Order Array Containing Menu Item
+	 * @return
+	 */
 	public ArrayList<String> getOrder() {
 		return menuItem;
 	}
